@@ -9,7 +9,7 @@ define('SystemRoot',dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR);
 define('IncDir',SystemRoot.'inc'.DIRECTORY_SEPARATOR);
 define('CacheDir',SystemRoot.'cache'.DIRECTORY_SEPARATOR);
 define('MysqlEngine','MyISAM');//mysql默认引擎MyISAM,或InnoDB,请在安装前修改
-define('version','1.4.2');//版本
+define('version','1.4.3');//版本
 define('AdminDir','ucms');//后台目录
 define('DbError',1);
 $site_db='{sitedb}';

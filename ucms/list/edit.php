@@ -60,6 +60,17 @@ run_admin_hook($cid,'edit');
 	<?php
 	echo('<a href="?do=list&cid='.$cid.$articletableuri.$articleschooseuri.$moudleiduri.'" class="actionBtn" style="margin-left:10px"><em>返回</em></a>');
 	?>
+	<?php
+	if($link['ifshow']){
+		$visit=array();
+		$visit['cid']=$cid;
+		$visit['where']['id']=$id;
+		$visit_article=a($visit);
+		if ($visit_article && !empty($visit_article['link'])){
+			echo('<a href="'.$visit_article['link'].'" class="actionBtn" style="margin-left:10px;padding: 0 30px;" target="_blank"><em>浏览</em></a>');
+		}
+	}
+	?>
 	<?php echo($cname);?></h3>
 		<form id="form1" name="form1" method="post" action="?do=list_editpost&cid=<?php echo($cid);?><?php echo($articletableuri);?><?php echo($articleschooseuri);?><?php echo($moudleiduri);?>">
 		<?php newtoken();?>

@@ -63,4 +63,5 @@ $default_channel_setting['default_2']='eyJpbmZvIjp7ImNpZCI6IjU3IiwiMCI6IjU3IiwiZ
 //del 文章删除成功后
 //move 文章转移成功后
 //stredited 变量编辑成功后
-//演示:admin_hook(1,'index','indexshow');在后台访问栏目id为1的栏目的列表页时将会运行indexshow的函数 
+//演示:admin_hook(1,'index','indexshow');在后台访问栏目id为1的栏目的列表页时将会运行indexshow的函数
+//演示:admin_hook(1,'addpost;editpost','SaveRomoteImg');栏目id为1的栏目文章(增加或编辑)提交时运行SaveRomoteImg函数

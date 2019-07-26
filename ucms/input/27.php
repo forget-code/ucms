@@ -2,7 +2,7 @@
 <?php
 $inputvalues=json_decode($inputvalue,1);
 $hovercid=0;
-if(count($inputvalues)>0) {
+if(is_array($inputvalues)&&count($inputvalues)>0) {
 	foreach($inputvalues as $key=>$val) {
 		$set=array();
 		$set['cid']=$val[0];

@@ -7,11 +7,7 @@ if(empty($id)) {
 }
 $query = $GLOBALS['db'] -> query("SELECT * FROM ".tableex('moudle')." where id='$id'");
 $link = $GLOBALS['db'] -> fetchone($query);
-$strarray=explode('|',$link['strarray']);
-if(count($strarray)<2) {
-	$strarray[0]=0;
-	$strarray[1]='title';
-}
+
 $msetting=json_decode($link['msetting'],1);
 $cid = $link['cid'];
 $cname = $GLOBALS['db'] -> fetchcount("SELECT cname FROM ".tableex('channel')." where cid='$cid' limit 1");
@@ -69,21 +65,41 @@ $cname = $GLOBALS['db'] -> fetchcount("SELECT cname FROM ".tableex('channel')." 
 					echo('<script>$(function(){$("#fid").attr("disabled","desabled");});</script>');
 				}
 				?>
-				
 				</td></tr>
-			<tr><td width="10%" align="right">字段类型</td><td align="left">
+
+
+<tr><td width="10%" align="right">字段类型</td><td align="left">
 <select name="mkind" id="mkind"> 
 <?php
+$defaultcolumnkind="";
+$defaultcolumntips="";
+$defaultcolumnstrfrom="";
+$moresetting1='none';
+$moresetting2='none';
 foreach($inputkindarray as $val) {
 	if(isset($val['strfrom'])) {$val['strfrom']=$val['strfrom'];}else {$val['strfrom']=0;}
+	if(!isset($val['tips'])) {$val['tips']="";}
 	if($val['id']==$link['mkind']) {
-		echo('<option rel="'.$val['setting'].'" rev="'.$val['strfrom'].'" columnkind="'.md5($val['kind']).'" value="'.$val['id'].'" selected>'.$val['name'].'</option>'."\r\n");
-		$defaultcolumnkind=md5($val['kind']);
-		if($val['setting']==1) {$moresettingdisplay='';}else {$moresettingdisplay='none';}
-		if($val['strfrom']==1) {$strfromdisplay='';}else {$strfromdisplay='none';}
+		echo('<option rel="'.$val['setting'].'" rev="'.$val['strfrom'].'" alt="'.$val['tips'].'" columnkind="'.md5($val['kind']).'" value="'.$val['id'].'" selected>'.$val['name'].'</option>'."\r\n");
+		$defaultcolumntips=($val['tips']);
+		$defaultcolumnstrfrom=$val['strfrom'];
+		if($val['strfrom']==1) {$moresetting1='';$moresetting2='none';}elseif($val['strfrom']==2) {$moresetting1='none';$moresetting2='';}
 	}else {
-		echo('<option rel="'.$val['setting'].'" rev="'.$val['strfrom'].'" columnkind="'.md5($val['kind']).'" value="'.$val['id'].'">'.$val['name'].'</option>'."\r\n");
+		echo('<option rel="'.$val['setting'].'" rev="'.$val['strfrom'].'" alt="'.$val['tips'].'" columnkind="'.md5($val['kind']).'" value="'.$val['id'].'">'.$val['name'].'</option>'."\r\n");
 	}
+}
+$strarray=$link['strarray'];
+if($defaultcolumnstrfrom==1) {
+	$strarray=explode('|',$link['strarray']);
+	if(count($strarray)<2) {
+		$strarray[0]=0;
+		$strarray[1]='title';
+	}
+	$strarray[2]='';
+}elseif($defaultcolumnstrfrom==2) {
+	$strarray=array(0,'title',$strarray);
+}else {
+	$strarray=array(0,'title','');
 }
 ?>
 </select>
@@ -94,28 +110,21 @@ foreach($inputkindarray as $val) {
 			if ($("#mkind").find("option:selected").attr('columnkind')!=defaultcolumnkind)
 			{
 				alert('更换后的字段类型与更换前的字段类型不一致,\r\n请在数据库表中更改此字段为相应的类型.\r\n取消更改请刷新当前页面');
-				//defaultcolumnkind=$("#mkind").find("option:selected").attr('columnkind');
 			}
-			if ($("#mkind").find("option:selected").attr('rel')==1)
+			$('.input_tips').text($("#mkind").find("option:selected").attr('alt'));
+			if ($("#mkind").find("option:selected").attr('rel')>0)
 			{
-				$('#moresetting').show();
+				$('.input_moresetting').hide();
+				$('#moresetting'+$("#mkind").find("option:selected").attr('rev')).show();
 			}else{
-				$('#moresetting').hide();
+				$('.input_moresetting').hide();
 			}
-			if ($("#mkind").find("option:selected").attr('rev')==1)
-			{
-				$('#strfrom').show();
-			}else{
-				$('#strfrom').hide();
-			}
-			$('.strarrytipslist li').hide();
-			$('.strarrytipslist li[rel='+$(this).val()+']').show();
 		});
 	});
 </script>		
-				</td></tr>
+</td></tr>
 
-<tr id="moresetting" style="display:<?php echo($moresettingdisplay);?>"><td width="10%" align="right">字段数据来源</td>
+<tr id="moresetting1" class="input_moresetting" style="display:<?php echo($moresetting1);?>"><td width="10%" align="right">字段数据来源</td>
 <td align="left">
 <select id="strfrom0" name="strarray0">
 <?php
@@ -130,7 +139,7 @@ if(isset($strarray[1])) {
 }
 ?>
 </select>
-<em class="pleasetips" style="color:red;display:none">请配置字段数据来源</em>
+<i class="input_tips"><?php echo($defaultcolumntips);?></i>
 <script>
 $(function(){
 	changestrarray('<?php echo($strarray[1]);?>');
@@ -156,18 +165,20 @@ function changestrarray(strdefault){
 		$('.strarrayloading').hide();
 		if ($('#strfrom1').val()=='')
 		{
-			$('.pleasetips').show();
+			//$('.pleasetips').show();
 		}else{
-			$('.pleasetips').hide();
+			//$('.pleasetips').hide();
 		}
 	  });
 }
 </script>
-				</td></tr>
-				<tr><td width="10%" align="right">输入提示</td>
-				<td align="left">
-				<textarea name="mcontent" rows="3" class="textarea" cols="50"><?php echo(htmlspecialchars($link['mcontent']));?></textarea>
-				</td></tr>
+</td></tr>
+
+<tr id="moresetting2"  class="input_moresetting" style="display:<?php echo($moresetting2);?>"><td width="10%" align="right">字段配置</td>
+<td align="left">
+<input type="text" name="strarray2" size="40" class="inputtext" value="<?php echo($strarray[2]);?>">
+<i class="input_tips"><?php echo($defaultcolumntips);?></i>
+</td></tr>
 
 				<tr><td width="10%" align="right">数据校验正则</td>
 				<td align="left">
@@ -187,6 +198,11 @@ function changestrarray(strdefault){
 				<option<?php if($msetting['regular']=='/(.*)$/') {echo(' selected');}?> value="/(.*)$/">任意字符串</option>
 				</select>
 				<i>不填则不限制</i>
+				</td></tr>
+
+				<tr><td width="10%" align="right">输入提示</td>
+				<td align="left">
+				<textarea name="mcontent" rows="3" class="textarea" cols="50"><?php echo(htmlspecialchars($link['mcontent']));?></textarea>
 				</td></tr>
 
 				<tr><td width="10%" align="right">长度限制</td>

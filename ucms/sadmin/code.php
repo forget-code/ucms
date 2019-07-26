@@ -52,7 +52,7 @@ $br="\r\n";
 		}else {
 			$functionname='z';
 		}
-		if($codekind==1 || $codekind==2 || $codekind==3 || $codekind==4 || $codekind==5 || $codekind==7 || $codekind==16) {
+		if($codekind==1 || $codekind==2 || $codekind==3 || $codekind==4 || $codekind==5 || $codekind==7 || $codekind==16 || $codekind==30) {
 			if($kind) {
 				echo(TemplateStart.'$article[\''.$codename.'\']'.TemplateEnd);
 			}else {

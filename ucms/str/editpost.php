@@ -20,7 +20,7 @@ foreach ($_POST as $key => $value)
 			$thischannel =adminchannel($cid);
 			if($cid>0 && $thischannel['ifshowadmin']==0) {adminmsg('','此栏目已经禁用');}
 			unset($thisarray);
-			$thisarray=array('mkind'=>$link['inputkind'],'mname'=>$key,'msetting'=>$link['ssetting']);
+			$thisarray=array('mkind'=>$link['inputkind'],'mname'=>$key,'msetting'=>$link['ssetting'],'strarray'=>$link['strarray']);
 			$value=inputvalue($thisarray);
 			if(isset($thisssetting['regular']) && strlen($thisssetting['regular'])>3) {
 				if(!preg_match($thisssetting['regular'],$value)){

@@ -396,6 +396,9 @@ function aurl($value,$rowurl,$rowurltime,$domain='') {
 		
 	}
 	if(empty($rowurl)) {
+		if(empty($thissetting['csetting']['channel_articleurl'])) {
+			Return '';
+		}
 		$rowurl=$thissetting['csetting']['channel_articleurl'];
 	}
 	if(!empty($where['domain'])) {
@@ -1494,7 +1497,6 @@ class db
 		}else{
 			$msg = $this->link->errorInfo();
 			echo('<FONT COLOR="#FF0000">' . $msg[2].'</FONT>');
-			//print_r($msg);
 		}
 		Return false;
 	}

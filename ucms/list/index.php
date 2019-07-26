@@ -340,6 +340,8 @@ $thismoudlearray=array();
 									echo('<td>');
 									htmlinput_error('list',$thismoudle['id']);
 								}
+							}else {
+								$thiscid=$strarray[$thismoudle['mname']]['cid'];
 							}
 							echo('<td align="center">');
 							if($article[$thismoudle['mname']]>0) {
@@ -383,6 +385,8 @@ $thismoudlearray=array();
 									echo('<td>');
 									htmlinput_error('list',$thismoudle['id']);
 								}
+							}else {
+								$thiscid=$strarray[$thismoudle['mname']]['cid'];
 							}
 							echo('<td align="center">');
 							$thisstrarray=json_decode(@$article[$thismoudle['mname']],1);
@@ -545,9 +549,20 @@ $thismoudlearray=array();
 								echo('未选');
 							}
 							echo('</td>');
-						}elseif($thismoudle['mkind']==24){
-							$thisvalue=json_decode($article[$thismoudle['mname']],1);
-							echo('<td align="center" >'.@(base64_decode($thisvalue['html'])).'啊啊啊</td>');
+						}elseif($thismoudle['mkind']==30){
+							echo('<td align="center" >');
+								$functionname=$thismoudle['strarray'];
+								if(function_exists($functionname)) {
+									$showvalue=$functionname('show',$thismoudle['mname'],@$article[$thismoudle['mname']]);
+									if($showvalue) {
+										echo($showvalue);
+									}else {
+										echo(@htmlspecialchars($article[$thismoudle['mname']]));
+									}
+								}else {
+									echo(@htmlspecialchars($article[$thismoudle['mname']]));
+								}
+							echo('</td>');
 						}else {
 							echo('<td align="center" >'.@htmlspecialchars($article[$thismoudle['mname']]).'</td>');
 						}

@@ -178,7 +178,7 @@ channel_select($link['fid']);
 <!-- 过渡栏目 -->
 	<div style="display:none" id="table5">
  <table width="100%" border="0" cellpadding="8" cellspacing="0" class="" style="border-top:0px;border-bottom:0px;">
-	<tr><td width="100" align="right">过渡栏目</td>
+	<tr><td width="100" align="right">前台设置</td>
 				<td align="left">
 <label><input type="checkbox" class="disable_tips" name="ifshow5"<?php if(isset($link['ifshow']) && $link['ifshow']==0) { echo(' checked');}?>>禁用该栏目</label>
 <label><input type="checkbox" name="ifshownav5"<?php if(isset($link['ifshownav']) && $link['ifshownav']==1) { echo(' checked');}?>>导航栏显示</label>

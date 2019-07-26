@@ -8,11 +8,7 @@ if(isset($_GET['id'])) {
 }
 $query = $GLOBALS['db'] -> query("SELECT * FROM ".tableex('str')." where id='$id' and inputkind>0");
 $link = $GLOBALS['db'] -> fetchone($query);
-$strarray=explode('|',$link['strarray']);
-if(count($strarray)<2) {
-	$strarray[0]=0;
-	$strarray[1]='title';
-}
+
 $ssetting=json_decode($link['ssetting'],1);
 $cid=$link['strcid'];
 ?>
@@ -40,41 +36,60 @@ if($link['strcid']>0) {
 <tr><td width="10%" align="right">变量类型</td><td align="left">
 <select name="inputkind" id="inputkind"> 
 <?php
+$defaultcolumnkind="";
+$defaultcolumntips="";
+$defaultcolumnstrfrom="";
+$moresetting1='none';
+$moresetting2='none';
 foreach($inputkindarray as $val) {
 	if(isset($val['strfrom'])) {$val['strfrom']=$val['strfrom'];}else {$val['strfrom']=0;}
+	if(!isset($val['tips'])) {$val['tips']="";}
 	if($val['id']==$link['inputkind']) {
-		echo('<option rel="'.$val['setting'].'" rev="'.$val['strfrom'].'" value="'.$val['id'].'" selected>'.$val['name'].'</option>'."\r\n");
-		if($val['setting']==1) {$moresettingdisplay='';}else {$moresettingdisplay='none';}
-		if($val['strfrom']==1) {$strfromdisplay='';}else {$strfromdisplay='none';}
+		echo('<option rel="'.$val['setting'].'" rev="'.$val['strfrom'].'"  alt="'.$val['tips'].'"  value="'.$val['id'].'" selected>'.$val['name'].'</option>'."\r\n");
+		$defaultcolumnkind=md5($val['kind']);
+		$defaultcolumntips=($val['tips']);
+		$defaultcolumnstrfrom=$val['strfrom'];
+		if($val['strfrom']==1) {$moresetting1='';$moresetting2='none';}elseif($val['strfrom']==2) {$moresetting1='none';$moresetting2='';}
 	}else {
-		echo('<option rel="'.$val['setting'].'" rev="'.$val['strfrom'].'" value="'.$val['id'].'">'.$val['name'].'</option>'."\r\n");
+		echo('<option rel="'.$val['setting'].'" rev="'.$val['strfrom'].'"  alt="'.$val['tips'].'"  value="'.$val['id'].'">'.$val['name'].'</option>'."\r\n");
 	}
+}
+$strarray=$link['strarray'];
+if($defaultcolumnstrfrom==1) {
+	$strarray=explode('|',$link['strarray']);
+	if(count($strarray)<2) {
+		$strarray[0]=0;
+		$strarray[1]='title';
+	}
+	$strarray[2]='';
+}elseif($defaultcolumnstrfrom==2) {
+	$strarray=array(0,'title',$strarray);
+}else {
+	$strarray=array(0,'title','');
 }
 ?>
 </select> 
+
+
 <script type="text/javascript">
 	$(function(){
 		$('#inputkind').change(function(){
-			$('.strarrytipslist li').hide();
-			$('.strarrytipslist li[rel='+$(this).val()+']').show();
-			if ($("#inputkind").find("option:selected").attr('rel')==1)
+			$('.input_tips').text($("#inputkind").find("option:selected").attr('alt'));
+			if ($("#inputkind").find("option:selected").attr('rel')>0)
 			{
-				$('#moresetting').show();
+				$('.input_moresetting').hide();
+				$('#moresetting'+$("#inputkind").find("option:selected").attr('rev')).show();
 			}else{
-				$('#moresetting').hide();
-			}
-			
-			if ($("#inputkind").find("option:selected").attr('rev')==1)
-			{
-				$('#strfrom').show();
-			}else{
-				$('#strfrom').hide();
+				$('.input_moresetting').hide();
 			}
 		});
 	});
 </script>
+
 </td></tr>
-<tr id="moresetting" style="display:<?php echo($moresettingdisplay);?>"><td width="10%" align="right">变量数据来源</td>
+
+
+<tr id="moresetting1" class="input_moresetting" style="display:<?php echo($moresetting1);?>"><td width="10%" align="right">变量数据来源</td>
 <td align="left">
 <select id="strfrom0" name="strarray0">
 <?php
@@ -89,7 +104,7 @@ if(isset($strarray[1])) {
 }
 ?>
 </select>
-<em class="pleasetips" style="color:red;display:none">请配置变量数据来源</em>
+<i class="input_tips"><?php echo($defaultcolumntips);?></i>
 <script>
 $(function(){
 	changestrarray('<?php echo($strarray[1]);?>');
@@ -115,19 +130,22 @@ function changestrarray(strdefault){
 		$('.strarrayloading').hide();
 		if ($('#strfrom1').val()=='')
 		{
-			$('.pleasetips').show();
+			//$('.pleasetips').show();
 		}else{
-			$('.pleasetips').hide();
+			//$('.pleasetips').hide();
 		}
 	  });
 }
 </script>
-				</td></tr>
+</td></tr>
 
-			<tr><td width="10%" align="right">输入提示</td>
-				<td align="left">
-				<textarea name="strtip" rows="3" cols="60"><?php echo($link['strtip']);?></textarea>
-				</td></tr>
+<tr id="moresetting2"  class="input_moresetting" style="display:<?php echo($moresetting2);?>"><td width="10%" align="right">变量配置</td>
+<td align="left">
+<input type="text" name="strarray2" size="40" class="inputtext" value="<?php echo($strarray[2]);?>">
+<i class="input_tips"><?php echo($defaultcolumntips);?></i>
+</td></tr>
+
+
 
 <tr><td width="10%" align="right">数据校验正则</td>
 				<td align="left">
@@ -156,6 +174,10 @@ function changestrarray(strdefault){
 				<i>不填则不限制</i>
 				</td></tr>
 
+			<tr><td width="10%" align="right">输入提示</td>
+				<td align="left">
+				<textarea name="strtip" rows="3" cols="60"><?php echo($link['strtip']);?></textarea>
+				</td></tr>
 
 				<tr><td width="10%" align="right">HTML代码设置</td>
 				<td align="left">

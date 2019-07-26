@@ -110,7 +110,7 @@ foreach($links as $link) {
 	<?php if(!empty($link['fid'])) { echo('<a style="color:#33CC00" title="上级字段:'.$link['fid'].'">二</a>'); } ?>
 	<?php
 		$val=inputkindinfo($link['mkind']);
-		if($val && $val['setting']==1) {
+		if($val && $val['strfrom']==1) {
 			if(count($thissetting)<2) {
 				echo(' <a href="?do=sadmin_aedit&cid='.$link['cid'].'&id='.$link['id'].'" style="color:#FF0000">尚未配置</a>');
 			}else{
@@ -118,6 +118,12 @@ foreach($links as $link) {
 				if(!$query) {
 					echo(' <a href="?do=sadmin_aedit&cid='.$link['cid'].'&id='.$link['id'].'" style="color:#FF0000">配置有误</a>');
 				}
+			}
+		}elseif($val && $val['id']==30) {
+			if(empty($link['strarray'])) {
+				echo(' <a href="?do=sadmin_aedit&cid='.$link['cid'].'&id='.$link['id'].'" style="color:#FF0000">尚未配置</a>');
+			}elseif(!function_exists($link['strarray'])) {
+				echo(' <a href="?do=sadmin_aedit&cid='.$link['cid'].'&id='.$link['id'].'" style="color:#FF0000">函数不存在</a>');
 			}
 		}
 	?>

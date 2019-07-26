@@ -41,12 +41,31 @@ if($pagecount>0) {
 	$mcontent=dbstr($_POST['mcontent']);
 	$mfunction=dbstr($_POST['mfunction']);
 	$strdefault=dbstr($_POST['strdefault']);
-	$strarray0=intval($_POST['strarray0']);
-	$strarray1=dbstr($_POST['strarray1']);
-	if(!preg_match("/^[a-z][a-z0-9_]+$/",$strarray1) && !empty($strarray1)) {
-		die('error');
+
+	$strfrom=0;
+	foreach($inputkindarray as $val) {
+		if($mkind==$val['id'] && isset($val['strfrom'])) {
+			$strfrom=$val['strfrom'];
+		}
 	}
-	$strarray=$strarray0.'|'.$strarray1;
+	
+	if($strfrom==1) {
+		$strarray0=intval($_POST['strarray0']);
+		$strarray1=dbstr($_POST['strarray1']);
+		if(!preg_match("/^[a-z][a-z0-9_]+$/",$strarray1) && !empty($strarray1)) {
+			die('error');
+		}
+		$strarray=$strarray0.'|'.$strarray1;
+	}elseif($strfrom==2) {
+		$strarray=dbstr($_POST['strarray2']);
+		if(!preg_match("/^[a-zA-Z][a-zA-Z0-9_]+$/",$strarray) && !empty($strarray)) {
+			adminmsg('','函数名有误',5);
+		}
+	}else {
+		$strarray='';
+	}
+	
+	
 	$oldmname = $GLOBALS['db'] -> fetchcount("SELECT mname FROM ".tableex('moudle')." where id='$mid';");
 	$query = $GLOBALS['db'] -> query("UPDATE ".tableex('moudle')." SET fid='$fid',hide='$hide',ifadmin='$ifadmin',ifonly='$ifonly',ifmore='$ifmore',strdefault='$strdefault',mfunction='$mfunction',mname='$mname',minfo='$minfo',mcontent='$mcontent',mkind='$mkind',morder='$morder',ifshow='$ifshow',ifshowtemp='$ifshowtemp',strarray='$strarray',msetting='$msetting' WHERE id='$mid'");
 	if($query) {

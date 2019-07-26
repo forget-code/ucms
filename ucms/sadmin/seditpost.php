@@ -30,12 +30,31 @@ if(isset($_POST['ifadmin'])) {
 $strtip=dbstr($_POST['strtip']);
 $strstyle=dbstr($_POST['strstyle']);
 $ssetting=dbstr(json_encode($_POST['ssetting']));
-$strarray0=intval($_POST['strarray0']);
-$strarray1=dbstr($_POST['strarray1']);
-if(!preg_match("/^[a-z][a-z0-9_]+$/",$strarray1) && !empty($strarray1)) {
-	die('error');
+
+$strfrom=0;
+foreach($inputkindarray as $val) {
+	if($inputkind==$val['id'] && isset($val['strfrom'])) {
+		$strfrom=$val['strfrom'];
+	}
 }
-$strarray=$strarray0.'|'.$strarray1;
+
+if($strfrom==1) {
+	$strarray0=intval($_POST['strarray0']);
+	$strarray1=dbstr($_POST['strarray1']);
+	if(!preg_match("/^[a-z][a-z0-9_]+$/",$strarray1) && !empty($strarray1)) {
+		die('error');
+	}
+	$strarray=$strarray0.'|'.$strarray1;
+}elseif($strfrom==2) {
+	$strarray=dbstr($_POST['strarray2']);
+	if(!preg_match("/^[a-zA-Z][a-zA-Z0-9_]+$/",$strarray) && !empty($strarray)) {
+		adminmsg('','函数名有误',3);
+	}
+}else {
+	$strarray='';
+}
+
+
 $query = $GLOBALS['db'] -> query("UPDATE ".tableex('str')." SET strname='$strname',inputkind='$inputkind',strstyle='$strstyle',strorder='$strorder',strtip='$strtip',strarray='$strarray',ifbind='$ifbind',ifadmin='$ifadmin',ssetting='$ssetting' WHERE id='$id'");
 
 if($query) {

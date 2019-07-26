@@ -11,7 +11,7 @@ if(empty($style)) {
 
 foreach($allchannel as $val) {
 	if($val['ifshowadmin']) {
-		if(in_array($val['cid'],$inputvalues)) {
+		if(is_array($inputvalues) && in_array($val['cid'],$inputvalues)) {
 			echo('<option value="'.$val['cid'].'" selected>'.$val['ext'].$val['cname'].'</option>');
 		}else {
 			echo('<option value="'.$val['cid'].'">'.$val['ext'].$val['cname'].'</option>');

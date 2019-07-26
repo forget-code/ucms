@@ -120,28 +120,29 @@ array('id'=>'1',	'name'=>'文本框',				'kind'=>'varchar',		'setting'=>0),
 array('id'=>'2',	'name'=>'多行文本',				'kind'=>'text',			'setting'=>0),
 array('id'=>'3',	'name'=>'编辑框(简单)',			'kind'=>'text',			'setting'=>0),
 array('id'=>'4',	'name'=>'编辑框(全功能)',		'kind'=>'text',			'setting'=>0),
-array('id'=>'24',	'name'=>'编辑器(MarkDown)',		'kind'=>'text',			'setting'=>0),
+array('id'=>'24',	'name'=>'编辑框(MarkDown)',		'kind'=>'text',			'setting'=>0),
 array('id'=>'5',	'name'=>'文件/图片上传',		'kind'=>'varchar',		'setting'=>0),
 array('id'=>'6',	'name'=>'多图上传',				'kind'=>'text',			'setting'=>0),
 array('id'=>'7',	'name'=>'数字/排序',			'kind'=>'int',			'setting'=>0),
 array('id'=>'9',	'name'=>'时间',					'kind'=>'int',			'setting'=>0),
-array('id'=>'26',	'name'=>'勾选框',				'kind'=>'int',			'setting'=>0),
-array('id'=>'12',	'name'=>'单选框',				'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>''),
-array('id'=>'10',	'name'=>'多选框',				'kind'=>'varchar',		'setting'=>1,	'strfrom'=>1,	'tips'=>''),
-array('id'=>'11',	'name'=>'列表框',				'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>''),
-array('id'=>'8',	'name'=>'列表框(树形)',			'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'来源栏目下必须有fid字段'),
-array('id'=>'14',	'name'=>'列表框(搜索)',			'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>''),
-array('id'=>'15',	'name'=>'多选框(搜索)',			'kind'=>'varchar',		'setting'=>1,	'strfrom'=>1,	'tips'=>''),
-array('id'=>'21',	'name'=>'文章单选',				'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>''),
-array('id'=>'22',	'name'=>'文章多选',				'kind'=>'varchar',		'setting'=>1,	'strfrom'=>1,	'tips'=>''),
+array('id'=>'26',	'name'=>'勾选框(是否)',			'kind'=>'int',			'setting'=>0),
+array('id'=>'12',	'name'=>'单选框',				'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'请配置字段数据来源'),
+array('id'=>'10',	'name'=>'多选框',				'kind'=>'varchar',		'setting'=>1,	'strfrom'=>1,	'tips'=>'请配置字段数据来源'),
+array('id'=>'15',	'name'=>'多选框(搜索)',			'kind'=>'varchar',		'setting'=>1,	'strfrom'=>1,	'tips'=>'请配置字段数据来源'),
+array('id'=>'11',	'name'=>'列表框',				'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'请配置字段数据来源'),
+array('id'=>'8',	'name'=>'列表框(树形)',			'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'请配置字段数据来源,来源栏目下必须有fid字段'),
+array('id'=>'14',	'name'=>'列表框(搜索)',			'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'请配置字段数据来源'),
+array('id'=>'17',	'name'=>'列表框(联动)',			'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'请配置字段数据来源,来源栏目下必须有fid字段'),
+array('id'=>'21',	'name'=>'文章单选',				'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'请配置字段数据来源'),
+array('id'=>'22',	'name'=>'文章多选',				'kind'=>'varchar',		'setting'=>1,	'strfrom'=>1,	'tips'=>'请配置字段数据来源'),
+array('id'=>'27',	'name'=>'文章多选(全站)',		'kind'=>'varchar',		'setting'=>0),
 array('id'=>'28',	'name'=>'栏目单选',				'kind'=>'int',			'setting'=>0),
 array('id'=>'29',	'name'=>'栏目多选',				'kind'=>'varchar',		'setting'=>0),
-array('id'=>'27',	'name'=>'全站文章多选',			'kind'=>'varchar',		'setting'=>0),
-array('id'=>'17',	'name'=>'联动分类',				'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'来源栏目下必须有fid字段'),
 array('id'=>'16',	'name'=>'颜色选择器',			'kind'=>'varchar',		'setting'=>0),
 array('id'=>'18',	'name'=>'TAGS(竖)',				'kind'=>'text',			'setting'=>0),
 array('id'=>'19',	'name'=>'TAGS(横)',				'kind'=>'text',			'setting'=>0),
 array('id'=>'23',	'name'=>'地图坐标',				'kind'=>'varchar',		'setting'=>0),
+array('id'=>'30',	'name'=>'自定义',				'kind'=>'varchar',		'setting'=>1,	'strfrom'=>2,	'tips'=>'请输入自定义函数名 帮助:http://uuu.la/help/diyinput.html'),
 );
 $notallowfield=array('id','posttime','cid','adminuid','rowstyle','stepstyle','rowurl','link','refererurl','articletable','like','add','all','alter','as','and','asc'
 ,'before','between','bigint','binary','blob','both','by','call','cascade','case','change','char','check','column','create'
@@ -339,6 +340,14 @@ function inputvalue($moudle) {
 		}
 		Return (json_encode($newarray));
 	break;
+	case 30:
+		$functionname=$moudle['strarray'];
+		if(function_exists($functionname)) {
+			$inputvalue=$functionname('input',$inputname,'');
+			Return filterhtml($inputvalue,$filterhtml);
+		}
+		Return '';
+	break;
 	default:
 		Return isset($_POST[$inputname]) ?  filterhtml($_POST[$inputname],$filterhtml) : '';
 	}
@@ -347,6 +356,7 @@ function inputkindinfo($id) {
 	global $inputkindarray;
 	foreach($inputkindarray as $val) {
 		if($id==$val['id']) {
+			if(!isset($val['strfrom'])) {$val['strfrom']='';}
 			Return $val;
 		}
 	}
@@ -488,8 +498,13 @@ function admin_hook($cid,$action,$funcname) {
 function run_admin_hook($cid,$action) {
 	global $admin_hooks;
 	foreach($admin_hooks as $thishook) {
-		if($cid==$thishook['cid'] && $action==$thishook['action']) {
-			runfunc($thishook['funcname']);
+		if($cid==$thishook['cid']){
+			$thishook_actions=explode(';',$thishook['action']);
+			foreach($thishook_actions as $thishook_action) {
+				if($action==$thishook_action) {
+					runfunc($thishook['funcname']);
+				}
+			}
 		}
 	}
 }

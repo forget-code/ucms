@@ -57,7 +57,7 @@ foreach ($linkbasic as $link1){
 <?php
 	$thissetting=explode('|',$link1['strarray']);
 	$val=inputkindinfo($link1['inputkind']);
-	if($val && $val['setting']==1) {
+	if($val && $val['strfrom']==1) {
 		if(count($thissetting)<2) {
 			echo(' <a href="?do=sadmin_sbasicedit&cid='.$link1['strcid'].'&id='.$link1['id'].'" style="color:#FF0000">尚未配置</a>');
 		}else{
@@ -65,6 +65,12 @@ foreach ($linkbasic as $link1){
 			if(!$query) {
 				echo(' <a href="?do=sadmin_sbasicedit&cid='.$link1['strcid'].'&id='.$link1['id'].'" style="color:#FF0000">配置有误</a>');
 			}
+		}
+	}elseif($val && $val['id']==30) {
+		if(empty($link1['strarray'])) {
+			echo(' <a href="?do=sadmin_sbasicedit&cid='.$link1['strcid'].'&id='.$link1['id'].'" style="color:#FF0000">尚未配置</a>');
+		}elseif(!function_exists($link1['strarray'])) {
+			echo(' <a href="?do=sadmin_sbasicedit&cid='.$link1['strcid'].'&id='.$link1['id'].'" style="color:#FF0000">函数不存在</a>');
 		}
 	}
 ?>
