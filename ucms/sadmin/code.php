@@ -233,10 +233,11 @@ $br="\r\n";
 		}
 		if($cid>0 && !$kind) {
 			$channelinfo =adminchannel($cid);
-			echo($br.$br.$br.'如需在首页或其他栏目调用本变量,请将 s('.$codename.') 替换为 s('.$codename.','.$cid.') 其中 '.$cid.' 代表栏目的cid ');
+			echo($br.$br.$br.'如需在首页或其他栏目调用本变量,请将 s('.$codename.') 替换为 ');
 			if(isset($channelinfo['cname']) && !empty($channelinfo['cname'])) {
-				echo('也可使用 s('.$codename.','.$channelinfo['cname'].')');
+				echo('s('.$codename.','.$channelinfo['cname'].') 或 ');
 			}
+			echo('s('.$codename.','.$cid.') &nbsp;&nbsp;&nbsp;&nbsp;'.$cid.' 代表栏目的cid ');
 		}
 		?>
 		</div>

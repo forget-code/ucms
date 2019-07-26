@@ -75,7 +75,7 @@ if(isset($_GET['code'])) {
 		if(AdminOpenid) {
 		?>
 		<tr>
-			<td width="100" align="right">第三方登陆：</td>
+			<td width="100" align="right">第三方登录：</td>
 			<td height="24" align="left">
 			  <div id="uuulogin">
 			<?php
@@ -99,7 +99,7 @@ if(isset($_GET['code'])) {
 		?>
 			<tr>
 				<td width="100" align="right">密&nbsp;&nbsp;&nbsp;&nbsp;码：</td>
-				<td height="25" align="left"><input name="psd" type="password" id="psd" class="inputtext" size="40" value="" onfocus="document.getElementById('psdshow').style.display = '';"/> 不修改则留空</td>
+				<td height="25" align="left"><input name="psd" type="password" id="psd" class="inputtext" size="40" value="" onfocus="document.getElementById('psdshow').style.display = '';"/> 不修改则留空,修改后需重新登录</td>
 			</tr>
 			<tr style="display:none" id="psdshow">
 				<td height="25" align="right">确认密码：</td>

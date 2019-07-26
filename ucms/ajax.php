@@ -254,12 +254,10 @@ if($_GET['do']=='strarraylist') {
 if($_GET['do']=='listcheckboxchange') {
 	$cid=intval($_POST['cid']);
 	$articleid=intval($_POST['articleid']);
-	$articletable=($_POST['articletable']);
+	$articletable=dbstr($_POST['articletable']);
 	$status=intval($_POST['status']);
 	$field=dbstr($_POST['field']);
-	if(preg_match("/^[a-z][a-z0-9_]+$/",$articletable)) {
-		die('articletable error');
-	}
+	if(!admintablecheck($articletable)) {die('栏目表名有误');}
 	$query = $GLOBALS['db'] -> query("SELECT * FROM ".tableex('channel')." where cid='$cid' limit 1");
 	$link = $GLOBALS['db'] -> fetchone($query);
 	if($link['ifshowadmin']==0) {die('channel error');}

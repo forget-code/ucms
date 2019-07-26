@@ -14,7 +14,7 @@ if (!defined('loginpage')) {
 	$mynickname=$mjjinfo['nickname'];
 	$myadminuid=$mjjinfo['id'];
 	if(!power('b',1)) {
-		admin_error('该账户已禁止登陆');
+		admin_error('该账户已禁止登录');
 	}
 }
 function newtoken($input=1) {
@@ -75,7 +75,7 @@ function setadminpsd($value) {
 function setadmintoken($value) {
 	setcookie('token_'.cookiehash,$value, time()+604800);
 }
-function admin_error($info='登陆信息有误,请重新登陆') {
+function admin_error($info='登录信息有误,请重新登录') {
 	echo('<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">');
 	echo("<meta http-equiv=refresh content='0; url=login.php'>");
 	exit();
@@ -365,40 +365,38 @@ function inputkindinfo($id) {
 }
 function adminpagelist($recordcount,$pagesize,$curpage,$pages,$url)
 {
-	 $totalpage = max(ceil($recordcount/$pagesize),1);
-	 if($curpage<0 || $curpage>$totalpage) $curpage=1;
-		$outhtml = "";
-	 $pageno = $curpage;
-	 if($pageno<0 || $pageno>$totalpage) $pageno=1;
-		 $outhtml.="<a href='".str_replace('{page}','1',$url)."'>&lt;&lt;</a>";
-	 if($pages>$totalpage){
-		  $startpage=1;
-		  $endpage=min($startpage+$pages,$totalpage);
-	 }else{
-		 $startpage=max($totalpage-$pages,1);
-		 $startpage=min($startpage,$curpage);
-		 $endpage=min($startpage+$pages,$totalpage);
-	 }
-	 if($pageno>1){
-		$outhtml.="<a href='".str_replace('{page}',$pageno-1,$url)."'>&lt;</a>";
-	 }else{
-		 $outhtml.="<a href='".str_replace('{page}','1',$url)."'>&lt;</a>";
-	 }
-	 for($i=$startpage;$i<=$endpage;$i++)
-	 {
+	$totalpage = max(ceil($recordcount/$pagesize),1);
+	if($curpage<0 || $curpage>$totalpage) {$curpage=1;}
+	$outhtml = "";
+	$pageno = $curpage;
+	if($pageno<0 || $pageno>$totalpage) {$pageno=1;}
+	if($pageno>2) {
+		$outhtml.="<a href='".str_replace('{page}','1',$url)."'>&lt;&lt;</a>";
+	}
+	if($pages>$totalpage){
+		$startpage=1;
+		$endpage=min($startpage+$pages,$totalpage);
+	}else{
+		$startpage=max($totalpage-$pages,1);
+		$startpage=min($startpage,$curpage);
+		$endpage=min($startpage+$pages,$totalpage);
+	}
+	if($pageno>1) {
+		$outhtml.="<a href='".str_replace('{page}',$pageno-1,$url)."'>".($pageno-1)."</a>";
+	}
+	for($i=$startpage;$i<=$endpage;$i++)
+	{
 		if($curpage==$i){
 			$outhtml.="<a class=\"current\">$i</a>";
 		}else{
 			$outhtml.="<a href='".str_replace('{page}',$i,$url)."'>$i</a>";
 		}
-	 }
-	 if($pageno<$totalpage){
+	}
+	if($pageno<$totalpage){
 		$outhtml.="<a href='".str_replace('{page}',$pageno+1,$url)."'>&gt;</a>";
-	 }else{
-		 $outhtml.="<a href='".str_replace('{page}',$totalpage,$url)."'>&gt;</a>";
-	 }
-	 $outhtml.="<a href='".str_replace('{page}',$totalpage,$url)."'>&gt;&gt;</a>";
-	 echo $outhtml;
+		$outhtml.="<a href='".str_replace('{page}',$totalpage,$url)."'>&gt;&gt;</a>";
+	}
+	echo $outhtml;
 }
 function admin_nav($cidarray) {
 	global $cid;
@@ -666,6 +664,10 @@ function getlistsearchcolumn($cid) {
 		}
 	}
 	Return $columnsarray;
+}
+function admintablecheck($tablename) {
+	if(empty($tablename)) {Return true;}
+	Return preg_match("/^[A-Za-z0-9_]+$/",$tablename);
 }
 function adminchannelcache($cid) {
 	$channel=getchannelcache($cid);

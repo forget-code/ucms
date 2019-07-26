@@ -336,7 +336,7 @@ table.noborder td, table.noborder th {
 }
 
 .pager{ text-align:right; padding-top:20px; margin-right:20px; color:#666; }
-.pager a{padding:4px 12px;font-size:12px;border:solid 1px #ccc;margin-right:2px;color:#666;background:#eee}
+.pager a{padding:4px 12px;font-size:12px;border:solid 1px #ccc;margin-right:2px;color:#666;background:#eee;}
 .pager a.current{background:#ccc}
 .pager a:hover{background:#ccc}
 #pagesize{width:30px;text-align:center;color:#666}
@@ -491,20 +491,16 @@ p.dtexttrdel{
 	cursor:pointer;
 }
 .listmore{
-	color:#ccc !important;
+	color:#fff !important;
+	background:#FF6600;
 	float:right;
 	margin-left:200px;
 	font-size:16px;
 	text-align:center;
 	display:block;
-	border:1px solid #ccc;
 	-webkit-border-radius:2px;
 	cursor:pointer;
 	width:120px;
-}
-.listmore:hover{
-	background:#255c94;
-	color:#ffffff !important;
 }
 .listhidden{
 	display:none;

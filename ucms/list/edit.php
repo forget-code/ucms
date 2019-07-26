@@ -17,6 +17,7 @@ if(isset($_GET['articletable']) && !empty($_GET['articletable'])) {
 	$articletableuri='';
 	if(isset($csetting['articletable'])) {$articletable=$csetting['articletable'];}else {adminmsg('','栏目尚未配置');}
 }
+if(!admintablecheck($articletable)) {adminmsg('','栏目表名有误');}
 if(isset($_GET['articlemname'])) {
 	$articlemname=dbstr(htmlspecialchars($_GET['articlemname']));
 	if(isset($_GET['articlechoose'])) {
@@ -75,11 +76,11 @@ run_admin_hook($cid,'edit');
 		<?php newtoken();?>
 		<input type="hidden" name="id" value="<?php echo($id);?>">
 		<input type="hidden" name="cid" value="<?php echo($cid);?>">
-     <table width="100%" border="0" cellpadding="8" cellspacing="0" class="">
-   <?php
-	  foreach ($moudle as $value) 
-	  {    
-		  if(empty($value['fid'])) {
+		<table width="100%" border="0" cellpadding="8" cellspacing="0" class="">
+	<?php
+		foreach ($moudle as $value) 
+		{
+			if(empty($value['fid'])) {
 			$thisinput=array();
 			$thisinput['style']=$value['mfunction'];
 			if(isset($article[$value['mname']])) {
@@ -87,9 +88,20 @@ run_admin_hook($cid,'edit');
 			}else {
 				$strdefault='';
 			}
-	  ?>
-	  <tr<?php if($value['ifmore']==1){echo(' class="listhidden"');$haveshowmoudle=1;} ?>>
-		  <td height="24" width="100" align="right"><?php echo($value['minfo']);?></td>
+	?>
+		<tr<?php if($value['ifmore']==1){echo(' class="listhidden"');$haveshowmoudle=1;} ?>>
+		<?php
+		if(power('alevel')==3) {
+		?>
+			<td height="24" width="100" align="right"><a href="?do=sadmin_code&id=<?php echo($value['id']);?>&cid=<?php echo($cid);?>&kind=1"  tabindex="-1" target="_blank" style="color:#666666"><?php echo($value['minfo']);?></a></td>
+		<?php
+		}else{
+		?>
+			<td height="24" width="100" align="right"><?php echo($value['minfo']);?></td>
+		<?php
+		}
+		?>
+
 		  <td height="24" align="left">
 		  <?php 
 		$thisinput['pictips']=$value['mcontent'];
@@ -101,10 +113,10 @@ run_admin_hook($cid,'edit');
 		$thisinput['inputvalue']=$strdefault;
 		htmlinput($thisinput);
 		unset($thisinput);
-	  ?>
-		  
-		  <i><?php echo($value['mcontent']);?></i>
-		   <?php
+	?>
+		
+		<i><?php echo($value['mcontent']);?></i>
+		<?php
 			//二级字段
 			foreach ($moudle as $value2) 
 			{
@@ -125,18 +137,17 @@ run_admin_hook($cid,'edit');
 					echo('<i>'.$value2['mcontent'].'</i>');
 				}
 			}
-		  ?>
-		  
-		  </td>
+		?>
+		</td>
 		</tr>
 		<?php
-			  }//一级字段
+			}//一级字段
 		}
 		?>
-      <tr>
-       <td></td>
-       <td>
-        <input class="btn" style="width:140px;" type="submit" value="编 辑" />
+		<tr>
+		<td></td>
+		<td>
+		<input class="btn" style="width:140px;" type="submit" value="编 辑" />
 		<?php
 		if(isset($haveshowmoudle)) {
 			?>
@@ -157,9 +168,9 @@ run_admin_hook($cid,'edit');
 			<?php
 		}
 		?>
-       </td>
-      </tr>
-     </table>
-    </form>
-       </div>
+			</td>
+		</tr>
+		</table>
+	</form>
+	</div>
  </div>

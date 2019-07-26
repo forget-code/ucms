@@ -39,6 +39,7 @@ if(isset($_GET['articletable']) && !empty($_GET['articletable'])) {
 	$articletable='';
 	$articletableuri='';
 }
+if(!admintablecheck($articletable)) {adminmsg('','栏目表名有误');}
 //后台排序方式
 if(isset($csetting['temppage_order']) && strlen($csetting['temppage_order'])>5) {
 	$ordersql=$csetting['temppage_order'];
@@ -354,6 +355,9 @@ $thismoudlearray=array();
 								if(!isset($strarray[$thismoudle['mname']]['list'][$article[$thismoudle['mname']]])) {
 									$query = $GLOBALS['db'] -> query("SELECT id,".$strarray[$thismoudle['mname']]['mname']." FROM ".$strarray[$thismoudle['mname']]['tablename']." where id='".$article[$thismoudle['mname']]."' limit 1;");
 									if($thislink = $GLOBALS['db'] -> fetchone($query)) {
+										if(empty($thislink[$strarray[$thismoudle['mname']]['mname']])) {
+											$thislink[$strarray[$thismoudle['mname']]['mname']]='无标题';
+										}
 										$strarray[$thismoudle['mname']]['list'][$article[$thismoudle['mname']]]=$thislink[$strarray[$thismoudle['mname']]['mname']];
 										
 									}else {
@@ -401,6 +405,9 @@ $thismoudlearray=array();
 									if(!isset($strarray[$thismoudle['mname']]['list'][$thisvalue])) {
 										$query = $GLOBALS['db'] -> query("SELECT id,".$strarray[$thismoudle['mname']]['mname']." FROM ".$strarray[$thismoudle['mname']]['tablename']." where id='$thisvalue' limit 1;");
 										if($thislink = $GLOBALS['db'] -> fetchone($query)) {
+											if(empty($thislink[$strarray[$thismoudle['mname']]['mname']])) {
+												$thislink[$strarray[$thismoudle['mname']]['mname']]='无标题';
+											}
 											$strarray[$thismoudle['mname']]['list'][$thisvalue]=$thislink[$strarray[$thismoudle['mname']]['mname']].'<br>';
 										}else {
 											$strarray[$thismoudle['mname']]['list'][$thisvalue]='<em class="warning">已删除</em><br>';
@@ -426,6 +433,9 @@ $thismoudlearray=array();
 									$thisstrarrayset['where']['id']=$thisvalue[1];
 									$thisstrarrayarticle=a($thisstrarrayset);
 									if($thisstrarrayarticle) {
+										if(empty($thisstrarrayarticle['title'])) {
+											$thisstrarrayarticle['title']='无标题';
+										}
 										echo('<span class="allarticleschose_adminlist"><a href="?do=list_edit&cid='.$thisvalue[0].'&id='.$thisvalue[1].'" target="_blank">'.$thisstrarrayarticle['title'].'</a></span>');
 									}else {
 										echo('<span class="allarticleschose_adminlist"><em class="warning">已删除</em></span>');
@@ -631,8 +641,8 @@ $thismoudlearray=array();
 unset($article);
 			}
 		 ?>
-          </table>
-    <div class="action">
+		</table>
+	<div class="action">
 		已选 <a class="chose_article_count">&nbsp;&nbsp;0&nbsp;&nbsp;</a> 项
 		<a href="javascript:select_article('all')">全选</a>
 		<a href="javascript:select_article('no')">反选</a> 
@@ -658,7 +668,7 @@ unset($article);
 	<?php
 		}
 	?>
-    </div>
+	</div>
 
 	<div class="pager">
 	总计 <?php echo($articles['pagecount']);?> 个记录，
@@ -668,7 +678,7 @@ unset($article);
 	$pageurl='?page={page}';
 	foreach($_GET as $key=>$val) {
 		if($key<>'page') {
-			$pageurl.='&'.$key.'='.$val;
+			$pageurl.='&'.$key.'='.urlencode($val);
 		}
 	}
 	adminpagelist($articles['pagecount'],$articles['pagesize'],$articles['page'],3,$pageurl);

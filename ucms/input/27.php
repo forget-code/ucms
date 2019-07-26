@@ -10,6 +10,9 @@ if(is_array($inputvalues)&&count($inputvalues)>0) {
 		$set['where']['id']=$val[1];
 		$article=a($set);
 		if($article) {
+			if(empty($article['title'])) {
+				$article['title']='无标题';
+			}
 			$hovercid=$val[0];
 			if(power('s',$val[0])) {
 				echo('<li><a rel="'.$article['id'].'" rev="'.$val[0].'" href="?do=list_edit&id='.$article['id'].'&cid='.$val[0].'&allarticleschoose='.$inputname.'&articlemname=title" target="_blank">'.$article['title'].'</a><div class="articleschose_action"><p class="up"></p><p class="down"></p><p class="del"></p></div><input type="hidden" name="'.$inputname.'[]" value="'.$article['id'].'"><input type="hidden" name="'.$inputname.'-channel[]" value="'.$val[0].'"></li>');

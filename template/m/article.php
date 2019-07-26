@@ -10,8 +10,12 @@
 <head>
 <meta charset="utf-8"/>
 <title>{$article['title']}</title>
+{if isset($article['keywords'])}
 <meta name="keywords" content="{$article['keywords']}"/>
+{/if}
+{if isset($article['description'])}
 <meta name="description" content="{$article['description']}"/>
+{/if}
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 <link rel="stylesheet" type="text/css" href="{tempdir}m/css/style.css" />
 </head>

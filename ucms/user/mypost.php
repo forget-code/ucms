@@ -32,8 +32,8 @@ if($psd=='') {
 	$psd=password_md5($psd);
 	$query = $GLOBALS['db'] -> query("UPDATE ".tableex('admin')." SET nickname='$nickname',psd='$psd' WHERE username='$thisname'");
 	if($query) {
-		$msg='修改成功';
-		setadminpsd($psd);
+		$msg='修改成功,请重新登录';
+		adminmsg('?do=user_my',$msg,3,'登录页');//setadminpsd($psd);
 	}else {
 		$msg='修改失败';
 	}

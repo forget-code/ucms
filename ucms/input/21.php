@@ -12,6 +12,9 @@ if($channel) {
 if($inputvalue>0) {
 	$query = $GLOBALS['db'] -> query("SELECT id,$mname FROM $thisarticletable where id='$inputvalue' limit 1;");
 	if($link = $GLOBALS['db'] -> fetchone($query)) {
+		if(empty($link[$mname])) {
+			$link[$mname]='无标题';
+		}
 		echo('<span id="'.$inputname.'" class="articlechoose"><a href="?do=list_edit&id='.$link['id'].'&cid='.$cid.'" target="_blank">'.$link[$mname].'</a><span></span></span>');
 	}else {
 		$inputvalue='';

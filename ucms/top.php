@@ -6,12 +6,7 @@ adminchannelscache();
  <div id="head">
   <div class="logo"><a href="index.php"></a></div>
   <div class="nav">
-   <ul>
-    <li class="onRight">
-	</li>
-   </ul>
    <ul class="navRight">
-
 	<li class="onRight"><a href="<?php echo(gethomeurl());?>" target="_blank">首页</a></li>
 	<?php
 	if(power('b',2)) {

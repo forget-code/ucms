@@ -85,7 +85,7 @@ if($step==0) {
 	$_GET['step']=0;
 	$disableinstall=0;
 	if(@filesize('../inc/config.php')>1000) {
-		$info.='貌似已经安装过了,如果一直出现安装页面,请更新OPcache等组件的缓存<br><a href="../ucms/">点此登陆后台</a>';
+		$info.='貌似已经安装过了,如果一直出现安装页面,请更新OPcache等组件的缓存<br><a href="../ucms/">点此登录后台</a>';
 	}
 	if(!ext_exist('mysql',1) && !ext_exist('pdo_mysql',1) && !ext_exist('pdo_sqlite',1)) {
 		if(count($extension)==0) {
@@ -127,7 +127,7 @@ if($step==0) {
 		$incdirtips='不可写';
 	}
 }elseif($step==1) {
-	if(isset($_GET['code'])) {//绑定qq登陆
+	if(isset($_GET['code'])) {//绑定qq登录
 		setcookie("ucmsid", $_GET['code'], time()+3600,'/');
 		echo('<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">');
 		echo('<script type="text/javascript">alert("绑定成功,请继续安装");window.close();</script>');
@@ -153,7 +153,7 @@ if($step==0) {
 	if($installdir!="'/'") {
 		$ifrewrite=false;
 	}else {
-		$rewritetesturi='http://'.$_SERVER['HTTP_HOST'].'/rewrite_test'.rand(666,1024).'.html';
+		$rewritetesturi='//'.$_SERVER['HTTP_HOST'].'/rewrite_test'.rand(666,1024).'.html';
 		$ifrewrite=true;
 	}
 }elseif($step==2) {
@@ -564,7 +564,7 @@ a{color:#0000FF;}
 		<div id="uuulogin" style="float:left;margin-left:10px;margin-top:-2px;">
 		<p class="ucms3login qqlogin" rel="qq"></p>
 		</div>
-		<i>绑定QQ登陆</i>
+		<i>绑定QQ登录</i>
 		</td>
 	</tr>
 	<tr>

@@ -63,7 +63,17 @@ foreach ($strlist as $link)
 { 
 	?>
 <tr>
-			<td width="100" align="right"><?php echo($link['strname']);?></td>
+<?php
+if(power('alevel')==3) {
+?>
+	<td width="100" align="right"><a href="?do=sadmin_code&id=<?php echo($link['id']);?>&cid=<?php echo($cid);?>&kind=0" tabindex="-1" target="_blank" style="color:#666666"><?php echo($link['strname']);?></a></td>
+<?php
+}else{
+?>
+	<td width="100" align="right"><?php echo($link['strname']);?></td>
+<?php
+}
+?>
 <td>
 <?php
 $strarray=explode('|',$link['strarray']);

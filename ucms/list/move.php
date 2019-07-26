@@ -10,6 +10,7 @@ if(isset($_GET['articletable']) && !empty($_GET['articletable'])) {
 	$articletableuri='';
 	$articletable='';
 }
+if(!admintablecheck($articletable)) {adminmsg('','栏目表名有误');}
 $ids=explode('_',$id);
 $cid=intval($_GET['cid']);
 $targetcid=intval($_GET['targetcid']);

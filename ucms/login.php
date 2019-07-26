@@ -33,11 +33,11 @@ if(isset($_GET['code']) && !empty($_GET['code']) && AdminOpenid) {
 				exit();
 			}
 		}else {
-			$errormsg='尚未绑定该账号,请使用账号密码登陆';
+			$errormsg='尚未绑定该账号,请使用账号密码登录';
 			cacheset($login_cachekey,$login_error_time+1,900,'ucmslogin');
 		}
 	}else {
-		$errormsg='登陆过于频繁,请稍后再试';
+		$errormsg='登录过于频繁,请稍后再试';
 		cacheset($login_cachekey,$login_error_time+1,900,'ucmslogin');
 	}
 }
@@ -63,7 +63,7 @@ if(isset($_POST['uuu_username'])) {
 			cacheset($login_cachekey,$login_error_time+1,900,'ucmslogin');
 		}
 	}else {
-		$errormsg='登陆过于频繁,请稍后再试';
+		$errormsg='登录过于频繁,请稍后再试';
 		cacheset($login_cachekey,$login_error_time+1,900,'ucmslogin');
 	}
 }
@@ -72,7 +72,7 @@ if(isset($_POST['uuu_username'])) {
 <html>
 <head>
 <meta charset="UTF-8">
-<title>后台管理登陆</title>
+<title>后台管理登录</title>
 <meta name="robots" content="noindex,nofollow,nosnippet,noarchive">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
 <link rel="shortcut icon" href="img/ico.ico" >
@@ -142,7 +142,7 @@ if(isset($errormsg)) {
 					echo('<td colspan=2>');
 				}
 				?>
-				<input type="submit" tabindex="4" value="登陆" class="submitbtn" />
+				<input type="submit" tabindex="4" value="登录" class="submitbtn" />
 				</td>
 			</tr>
 			

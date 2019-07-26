@@ -6,7 +6,7 @@ if($cid<1) {
 }
 if(isset($_GET['fid'])) {
 	$fid=intval($_GET['fid']);
-}else {
+}else{
 	$fid=0;
 }
 if(!power('s',$cid,$power,1)) {adminmsg('','无权限');}
@@ -27,6 +27,7 @@ if(isset($_GET['articletable']) && !empty($_GET['articletable'])) {
 	$articletable='';
 	$articletableuri='';
 }
+if(!admintablecheck($articletable)) {adminmsg('','栏目表名有误');}
 if(isset($_GET['articlemname'])) {
 	$articlemname=dbstr(htmlspecialchars($_GET['articlemname']));
 	if(isset($_GET['articlechoose'])) {
@@ -76,7 +77,7 @@ run_admin_hook($cid,'add');
 <div id="UMain">
   <!-- 当前位置 -->
 <div id="urHere"><em class="homeico"></em>后台管理<?php echo(admin_nav($link));?></div>   <div id="mainBox">
-    <h3>
+	<h3>
 	<?php
 		echo('<a href="?do=list&cid='.$cid.$articletableuri.$articleschooseuri.$moudleiduri.'" class="actionBtn" style="margin-left:10px"><em>返回</em></a>');
 	?>
@@ -86,7 +87,7 @@ run_admin_hook($cid,'add');
 		
 <input type="hidden" name="cid" value="<?php echo($cid);?>">
 <table width="100%" border="0" cellpadding="8" cellspacing="0" class="">
-  <?php
+	<?php
 	if(isset($_GET['test'])) {
 	?>
 	<tr>
@@ -117,9 +118,19 @@ run_admin_hook($cid,'add');
 			}else {
 				if(isset($value['strdefault'])) {$strdefault=$value['strdefault'];}else {$strdefault='';}
 			}
-	  ?>
-	  <tr<?php if($value['ifmore']==1){echo(' class="listhidden"');$haveshowmoudle=1;} ?>>
-		  <td height="24" width="100" align="right"><?php echo($value['minfo']);?></td>
+	?>
+		<tr<?php if($value['ifmore']==1){echo(' class="listhidden"');$haveshowmoudle=1;} ?>>
+		<?php
+		if(power('alevel')==3) {
+		?>
+			<td height="24" width="100" align="right"><a href="?do=sadmin_code&id=<?php echo($value['id']);?>&cid=<?php echo($cid);?>&kind=1"  tabindex="-1" target="_blank" style="color:#666666"><?php echo($value['minfo']);?></a></td>
+		<?php
+		}else{
+		?>
+			<td height="24" width="100" align="right"><?php echo($value['minfo']);?></td>
+		<?php
+		}
+		?>
 		  <td height="24" align="left" >
 		  <?php  
 		  
@@ -133,7 +144,7 @@ run_admin_hook($cid,'add');
 		$thisinput['inputvalue']=$strdefault;
 		htmlinput($thisinput);
 		unset($thisinput);
-	  ?>
+	?>
 		
 		<i><?php echo($value['mcontent']);?></i>
 		<?php
@@ -165,17 +176,17 @@ run_admin_hook($cid,'add');
 					echo('<i>'.$value2['mcontent'].'</i>');
 				}
 			}
-		  ?>
-		  </td>
+		?>
+		</td>
 		</tr>
 		<?php
-			  }//一级字段
+			}//一级字段
 		}
 		?>
-	   <tr>
-       <td width="100"></td>
-       <td>
-        <input class="btn" style="width:140px;" type="submit" value="增 加" /> 
+		<tr>
+		<td width="100"></td>
+		<td>
+		<input class="btn" style="width:140px;" type="submit" value="增 加" /> 
 		<?php
 		if(isset($haveshowmoudle)) {
 			?>
@@ -196,10 +207,9 @@ run_admin_hook($cid,'add');
 			<?php
 		}
 		?>
-		
-       </td>
-      </tr>
-     </table>
-    </form>
-       </div>
+			</td>
+		</tr>
+	</table>
+	</form>
+	</div>
  </div>

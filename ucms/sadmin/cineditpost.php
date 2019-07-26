@@ -29,7 +29,7 @@ if(isset($_POST['cid'])) {
 		if(stripos($channel_name,'临时栏目')===false) {
 
 		}else {
-			if(isset($channelarray['info']['cname']) && !empty($channelarray['info']['cname'])) {$newchannelinfo['cname']=dbstr($channelarray['info']['cname']);}
+			if(isset($channelarray['info']['cname']) && !empty($channelarray['info']['cname'])) {$newchannelinfo['cname']=dbstr(htmlspecialchars($channelarray['info']['cname'],ENT_QUOTES));}
 		}
 		if(isset($channelarray['info']['fid']) && !empty($channelarray['info']['fid'])) {
 			$channelarray['info']['fid']=dbstr($channelarray['info']['fid']);
@@ -124,7 +124,7 @@ if(isset($_POST['cid'])) {
 					if(isset($thisstr['strtip'])) {$thisstrarray['strtip']=dbstr($thisstr['strtip']);}else {$thisstrarray['strtip']='';}
 					if(isset($thisstr['strvalue']) && !empty($thisstr['strvalue'])) {$thisstrarray['strvalue']=dbstr($thisstr['strvalue']);}else {
 						$thisstrarray['strvalue']='';
-						if($thisstr['strname']=='栏目标题') {$thisstrarray['strvalue']=$channel_name;}
+						if($thisstr['strname']=='栏目标题') {$thisstrarray['strvalue']=dbstr($channel_name);}
 					}
 					$thisid = $GLOBALS['db'] -> insert(tableex('str'),$thisstrarray);
 				}

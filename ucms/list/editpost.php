@@ -15,6 +15,7 @@ if(isset($_GET['articletable']) && !empty($_GET['articletable'])) {
 	$articletableuri='';
 	if(isset($csetting['articletable'])) {$articletable=$csetting['articletable'];}else {die('栏目表名未知');}
 }
+if(!admintablecheck($articletable)) {adminmsg('','栏目表名有误');}
 $id=intval($_POST['id']);
 $delsql='';//如果栏目开通了普通用户只能管理自己的文章
 if(power('sadmin',0) || power('s',$cid,$power,5)) {}else {if(isset($csetting['listadminuid']) && $csetting['listadminuid']==1) {$delsql=" and adminuid='$myadminuid'";}}//普通用户只能编辑自己的文章

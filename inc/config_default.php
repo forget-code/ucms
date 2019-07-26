@@ -24,7 +24,7 @@ define('TemplateTime',0);//模板缓存时间
 define('TemplateStart','{');//模板开始标签
 define('TemplateEnd','}');//模板结束标签
 define('IndexCache',0);//首页缓存时间(秒)
-define('AdminOpenid',1);//后台开启第三方登陆
+define('AdminOpenid',1);//后台开启第三方登录
 define('AdminFileedit',1);//后台开启文件修改功能
 define('version','{version}');
 $site_db='{sitedb}';

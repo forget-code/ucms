@@ -10,8 +10,12 @@
 <head>
 <meta charset="utf-8"/>
 <title>{$article['title']}</title>
+{if isset($article['keywords'])}
 <meta name="keywords" content="{$article['keywords']}"/>
+{/if}
+{if isset($article['description'])}
 <meta name="description" content="{$article['description']}"/>
+{/if}
 <meta name="viewport" content="width=device-width"/>
 <link rel="stylesheet" type="text/css" href="{tempdir}css/style.css" />
 </head>
@@ -22,7 +26,11 @@
 		<div class="page_content">
 			<h1>{$article['title']}</h1>
 			<div class="article_content">
-			{$article['content']}
+			{if isset($article['content'])}
+				{$article['content']}
+			{else}
+				内容字段尚未增加
+			{/if}
 			</div>
 		</div>
 	</div>

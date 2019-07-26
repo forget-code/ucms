@@ -75,9 +75,7 @@ if($ckind==1) {
 	if(isset($_POST['articletable'])) {
 		if(strlen($_POST['articletable'])>0) {
 			$_POST['articletable']=strtolower($_POST['articletable']);
-			if(!preg_match("/^[a-zA-Z0-9_]+$/",$_POST['articletable'])){
-				adminmsg('','数据库表表名只能为字母数字下划线组合',1);
-			}
+			if(!admintablecheck($_POST['articletable'])) {adminmsg('','数据库表表名只能为字母数字下划线组合',1);}
 		}
 		if($_POST['articletable']==tableex('admin') || $_POST['articletable']==tableex('channel') || $_POST['articletable']==tableex('moudle') || $_POST['articletable']==tableex('str')) {
 			adminmsg('','数据库表表名与系统表冲突,请更换',1);

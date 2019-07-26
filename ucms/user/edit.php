@@ -89,7 +89,7 @@ $(document).ready(function(){
 		if(AdminOpenid) {
 		?>
 		<tr>
-			<td height="25" align="right">第三方登陆：</td>
+			<td height="25" align="right">第三方登录：</td>
 			<td height="25" align="left">
 		<?php
 			if($user['ucmsid']>0) {

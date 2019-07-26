@@ -19,6 +19,7 @@ if(isset($_GET['articletable']) && !empty($_GET['articletable'])) {
 	$articletableuri='';
 	if(isset($csetting['articletable'])) {$articletable=$csetting['articletable'];}else {die('栏目表名未知');}
 }
+if(!admintablecheck($articletable)) {adminmsg('','栏目表名有误');}
 if(isset($csetting['listnoadd']) && $csetting['listnoadd']==1) {adminmsg('','禁止增加');}
 if(power('sadmin',0) || power('s',$cid,$power,5)) {
 	$thissql='';

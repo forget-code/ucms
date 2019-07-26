@@ -12,10 +12,10 @@ if(isset($_GET['do']) && isset($_GET['nohtml'])) {
 	die();
 }
 function check_admin_file($dir,$file) {
-	if(!preg_match("/^[a-z\d]{1,15}$/i",$dir)){
+	if(!preg_match("/^[a-z\d]{1,25}$/i",$dir)){
 		die('file error');
 	}
-	if(!preg_match("/^[a-z\d]{1,15}$/i",$file)){
+	if(!preg_match("/^[a-z\d]{1,25}$/i",$file)){
 		die('file error');
 	}
 	if(!is_file($dir.'/'.$file.'.php')) {

@@ -79,6 +79,33 @@ function c($kind=0,$num=9999,$fid=0,$shownav=0) {
 function b($cid='',$return=false,$linktag=' &gt; ',$homepage=SystemDir) {
 	Return cnav($cid,$return,$linktag,$homepage);
 }
+function i($kind='',$cid=0) {
+	if($cid===0) {
+		if(!defined('cid')) {Return false;}
+		$cid=cid;
+	}
+	$channel=getchannelcache($cid);
+	if(!$channel) {
+		Return false;
+	}
+	if(empty($kind)) {
+		Return $channel;
+	}elseif($kind=='name' && isset($channel['cname'])) {
+		Return $channel['cname'];
+	}elseif($kind=='topfid') {
+		$breadcrumb=b($channel['cid'],1);
+		if(isset($breadcrumb[0]['cid'])) {
+			Return $breadcrumb[0]['cid'];
+		}
+	}elseif($kind=='url') {
+		Return u($channel['cid']);
+	}else {
+		if(isset($channel[$kind])) {
+			Return $channel[$kind];
+		}
+	}
+	Return false;
+}
 function uri($uri) {
 	$uri=ltrim($uri,'/');
 	if(UrlRewrite) {
@@ -234,7 +261,7 @@ function alist($where='') {
 		$sql.=" )";
 	}
 	if(!empty($sql)) {
-		$sql='where'.ltrim($sql,'and ');
+		$sql='where '.ltrim($sql,'and ');
 	}
 	if(isset($where['page'])) {
 		$where['page']=intval($where['page']);
@@ -1183,67 +1210,14 @@ function gethomeurl() {
 	$GLOBALS['homeurl']='//'.$domains[0].server_port().SystemDir.$indexfile;
 	Return $GLOBALS['homeurl'];
 }
-
 function str($strname,$cid='',$return=1)
 {
-		if($strname=='') {Return false;}
-		if(defined('cid') && $cid==='') {
-			$cid=cid;
-		}elseif($cid===0) {
-			$cid=0;
-		}else {
-			if(is_numeric($cid)) {
-				$cid=intval($cid);
-			}else {
-				$cinfo=getchannelcache($cid);
-				if($cinfo) {
-					$cid=$cinfo['cid'];
-				}else {
-					Return false;
-				}
-			}
-		}
-		$strname=dbstr($strname);
-		if(isset($GLOBALS['strget'][$cid][$strname])) {
-			if($return==1) {
-				Return $GLOBALS['strget'][$cid][$strname];
-			}else {
-				echo($GLOBALS['strget'][$cid][$strname]);
-				Return true;
-			}
-		}
-		if(SiteCache) {
-			$cachehash=$strname.'_'.$cid;
-			$res =cacheget($cachehash,3600*24*365,'str');
-			if ($res!==false) {
-				$GLOBALS['strget'][$cid][$strname]=$res;
-				if($return==1) {
-					Return $GLOBALS['strget'][$cid][$strname];
-				}else {
-					echo($GLOBALS['strget'][$cid][$strname]);
-					Return true;
-				}
-			}
-		}
-		$link = $GLOBALS['db'] -> one("SELECT strcid,strvalue FROM ".tableex('str')." where strname='$strname' and strcid='$cid' limit 1;");
-		if($link) {
-			$GLOBALS['strget'][$cid][$strname]=$link['strvalue'];
-			if(SiteCache) {cacheset($cachehash,$link['strvalue'],3600*24*365,'str');}
-			if($return==1) {
-				Return $GLOBALS['strget'][$cid][$strname];
-			}else {
-				echo($GLOBALS['strget'][$cid][$strname]);
-				Return true;
-			}
-		}
-		$GLOBALS['strget'][$cid][$strname]=false;
-		Return false;
-}
-function strset($strname,$strvalue,$cid=0)
-{
-		if($strname=='') {
-			Return false;
-		}
+	if($strname=='') {Return false;}
+	if(defined('cid') && $cid==='') {
+		$cid=cid;
+	}elseif($cid===0) {
+		$cid=0;
+	}else {
 		if(is_numeric($cid)) {
 			$cid=intval($cid);
 		}else {
@@ -1254,19 +1228,71 @@ function strset($strname,$strvalue,$cid=0)
 				Return false;
 			}
 		}
-		$strname=dbstr($strname);
-		$strvalue=dbstr($strvalue);
-		$query = $GLOBALS['db'] -> query("UPDATE ".tableex('str')." SET strvalue='$strvalue' WHERE strname='$strname' and strcid='$cid';");
-		if($query) {
-			$GLOBALS['strget'][$cid][$strname]=$strvalue;
-			if(SiteCache) {
-				$cachehash=$strname.'_'.$cid;
-				cacheset($cachehash,$strvalue,3600*24*365,'str');
-			}
+	}
+	$strname=dbstr($strname);
+	if(isset($GLOBALS['strget'][$cid][$strname])) {
+		if($return==1) {
+			Return $GLOBALS['strget'][$cid][$strname];
+		}else {
+			echo($GLOBALS['strget'][$cid][$strname]);
 			Return true;
+		}
+	}
+	if(SiteCache) {
+		$cachehash=$strname.'_'.$cid;
+		$res =cacheget($cachehash,3600*24*365,'str');
+		if ($res!==false) {
+			$GLOBALS['strget'][$cid][$strname]=$res;
+			if($return==1) {
+				Return $GLOBALS['strget'][$cid][$strname];
+			}else {
+				echo($GLOBALS['strget'][$cid][$strname]);
+				Return true;
+			}
+		}
+	}
+	$link = $GLOBALS['db'] -> one("SELECT strcid,strvalue FROM ".tableex('str')." where strname='$strname' and strcid='$cid' limit 1;");
+	if($link) {
+		$GLOBALS['strget'][$cid][$strname]=$link['strvalue'];
+		if(SiteCache) {cacheset($cachehash,$link['strvalue'],3600*24*365,'str');}
+		if($return==1) {
+			Return $GLOBALS['strget'][$cid][$strname];
+		}else {
+			echo($GLOBALS['strget'][$cid][$strname]);
+			Return true;
+		}
+	}
+	$GLOBALS['strget'][$cid][$strname]=false;
+	Return false;
+}
+function strset($strname,$strvalue,$cid=0)
+{
+	if($strname=='') {
+		Return false;
+	}
+	if(is_numeric($cid)) {
+		$cid=intval($cid);
+	}else {
+		$cinfo=getchannelcache($cid);
+		if($cinfo) {
+			$cid=$cinfo['cid'];
 		}else {
 			Return false;
 		}
+	}
+	$strname=dbstr($strname);
+	$strvalue=dbstr($strvalue);
+	$query = $GLOBALS['db'] -> query("UPDATE ".tableex('str')." SET strvalue='$strvalue' WHERE strname='$strname' and strcid='$cid';");
+	if($query) {
+		$GLOBALS['strget'][$cid][$strname]=$strvalue;
+		if(SiteCache) {
+			$cachehash=$strname.'_'.$cid;
+			cacheset($cachehash,$strvalue,3600*24*365,'str');
+		}
+		Return true;
+	}else {
+		Return false;
+	}
 }
 function cut_str($str, $length=250, $start=0)
 {

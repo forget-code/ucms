@@ -16,6 +16,9 @@ if(is_array($inputvalues) && count($inputvalues)>0) {
 	foreach($inputvalues as $value) {
 		$query = $GLOBALS['db'] -> query("SELECT id,$mname FROM $thisarticletable where id='$value' limit 1;");
 		if($link = $GLOBALS['db'] -> fetchone($query)) {
+			if(empty($link[$mname])) {
+				$link[$mname]='无标题';
+			}
 			echo('<li><a href="?do=list_edit&id='.$link['id'].'&cid='.$cid.'" target="_blank">'.$link[$mname].'</a>
 			<div class="articleschose_action"><p class="up"></p><p class="down"></p><p class="del"></p></div>
 			<input type="hidden" name="'.$inputname.'[]" value="'.$value.'">

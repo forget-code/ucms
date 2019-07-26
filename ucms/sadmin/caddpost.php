@@ -4,7 +4,7 @@ if(power('alevel')!=3) {die('error');}
 checktoken();
 if(isset($_POST['multiple_add'])) {
 	foreach($_POST['cname'] as $key=>$val) {
-		$cname=dbstr(trim(htmlspecialchars($val)));
+		$cname=dbstr(trim(htmlspecialchars($val,ENT_QUOTES)));
 		if(empty($cname)) {
 			$cname='临时栏目';
 		}
@@ -51,7 +51,7 @@ if(isset($_POST['multiple_add'])) {
 	channelrouter();
 	adminmsg('?do=sadmin','栏目增加成功,请在各个栏目内增加相应的字段与变量',10);
 }
-$cname=dbstr(trim(htmlspecialchars($_POST['cname'])));
+$cname=dbstr(trim(htmlspecialchars($_POST['cname'],ENT_QUOTES)));
 $fid=intval($_POST['fid']);
 if(!isset($_FILES['txt'])) {
 	if(empty($cname)) {
