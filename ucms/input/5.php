@@ -22,7 +22,7 @@ if($sbie) {
 <?php
 }	
 ?>
-<span style="position:absolute;overflow:hidden;text-align:center;padding:10px;z-index:121212" id="<?php echo($inputname);?>_pic"></span>
+<span id="<?php echo($inputname);?>_pic" class="input5_pic_preview" style="display:none"></span>
 
 <?php
 	if($sbie) {echo('<!-- ie不支持粘贴上传 -->');}else{

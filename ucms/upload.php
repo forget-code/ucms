@@ -21,6 +21,11 @@ if(strtolower($_SERVER['REQUEST_METHOD'])=='post') {
 }else {
 	$ifpost=false;
 }
+if(isset($_GET['inputname']) && stripos($_GET['inputname'],'_multiple_upload')>0) {
+	$multiple_upload=true;
+}else {
+	$multiple_upload=false;
+}
 if($ifpost==false) {
 	if(isset($_GET['inputname'])) {
 		$_GET['inputname']=htmlspecialchars($_GET['inputname']);
@@ -60,7 +65,18 @@ body{overflow-x:hidden;overflow-y:hidden;overflow:hidden;margin:0px;padding:0px;
 <div class="uploadarea">
 <form method=post enctype="multipart/form-data" action="?inputname=<?php echo($_GET['inputname']);?>" id="uploadfileform">
 <input type="hidden" id="picsize" name="picsize" value="<?php echo($picsize);?>"/>
-<input type="file" id="imgFile" name="imgFile" onchange="gouploadfile();"/>
+
+<?php
+if($multiple_upload) {
+?>
+	<input type="file" id="imgFile" name="imgFile[]" onchange="gouploadfile();"  multiple="multiple"/>
+<?php
+}else {
+?>
+	<input type="file" id="imgFile" name="imgFile" onchange="gouploadfile();"/>
+<?php
+}
+?>
 <span  id="uploadtips"><?php if($buttonvalue<>'选择文件') {echo($buttonvalue);}?></span>
 </form>
 <label for="imgFile" id="uploadbutton" onClick="iframeuploadfile();"><?php echo($buttonvalue);?></label>
@@ -85,12 +101,150 @@ function gouploadfile(){
 <?php
 	die();
 }
+
 $save_path =SystemRoot.UploadDir.DIRECTORY_SEPARATOR;
 $save_url = $filedomain.SystemDir.UploadDir.'/';
 $max_size = 100000000;//文件最大尺寸
 $save_path = realpath($save_path) . '/';
-if (!empty($_FILES['imgFile']['error'])) {
-	switch($_FILES['imgFile']['error']){
+
+
+if(!isset($_FILES['imgFile'])) {
+	alert('上传错误');
+}
+$allfiles=array();
+if(is_array($_FILES['imgFile']['name'])) {
+	foreach($_FILES['imgFile']['name'] as $key=>$val) {
+		$allfiles[]=array(
+			'name'=>$_FILES['imgFile']['name'][$key],
+			'type'=>$_FILES['imgFile']['type'][$key],
+			'tmp_name'=>$_FILES['imgFile']['tmp_name'][$key],
+			'error'=>$_FILES['imgFile']['error'][$key],
+			'size'=>$_FILES['imgFile']['size'][$key],
+			);
+	}
+}else {
+	$allfiles[]=$_FILES['imgFile'];
+}
+if(count($allfiles)==0) {
+	alert('上传错误。');
+}
+if (@is_dir($save_path) === false) {
+	alert("上传目录不存在。");
+}
+if (@is_writable($save_path) === false) {
+	alert("上传目录没有写权限。");
+}
+$allerror='';
+foreach($allfiles as $filekey=>$thisfile) {
+	$thisfile['error']=ucms_fileupload_error($thisfile);
+	$thisfile['save_path']=$save_path;
+	$thisfile['save_url']=$save_url;
+	if(empty($thisfile['name'])) {
+		$thisfile['error']='未知文件名。';
+	}
+	if (@is_uploaded_file($thisfile['tmp_name']) === false) {
+		$thisfile['error']='上传失败。';
+	}
+	if ($thisfile['size'] > $max_size) {
+		$thisfile['error']='上传文件大小超过限制。';
+	}
+	if ($thisfile['size'] ==0) {
+		$thisfile['error']='上传文件大小有误。';
+	}
+
+	$temp_arr = explode(".", $thisfile['name']);
+	$file_ext = array_pop($temp_arr);
+	$file_ext = strtolower(trim($file_ext));
+	
+	unset($dir_name);
+	foreach($ext_arr as $key=>$val) {
+		if(in_array($file_ext, $val)) {
+			$dir_name=$key;
+			break;
+		}
+	}
+	if(!isset($dir_name)) {
+		$thisfile['error']="上传文件扩展名是不允许的扩展名。";
+	}else {
+		if (in_array($file_ext, $ext_arr[$dir_name]) === false) {
+			$thisfile['error']="上传文件扩展名是不允许的扩展名。";
+		}
+	}
+	if($multiple_upload && isset($dir_name) && $dir_name!='image') {
+		$thisfile['error']="上传文件扩展名是不允许的扩展名。";
+	}
+	if(empty($thisfile['error'])) {
+		if($file_ext=='blob') {$file_ext='png';}
+		$thisfile['save_path'] .= $dir_name . DIRECTORY_SEPARATOR;
+		$thisfile['save_url']  .= $dir_name . "/";
+		if (!file_exists($thisfile['save_path'])) {mkdir($thisfile['save_path']);}
+		$ymd = date("Ymd");
+		$thisfile['save_path'] .= $ymd . DIRECTORY_SEPARATOR;
+		$thisfile['save_url'] .= $ymd . "/";
+		if (!file_exists($thisfile['save_path'])) {mkdir($thisfile['save_path']);}
+		$new_file_name = substr(md5(time().rand(10000, 99999)),0,9) .'.'.$file_ext;
+		$file_path = $thisfile['save_path'] . $new_file_name;
+		$thisfile['save_url'] .=$new_file_name;
+		$picsizes=explode('_',$picsize);
+		if(empty($thisfile['error'])) {
+			if($dir_name=='image' && isset($picsizes[0]) && isset($picsizes[1]) && $picsizes[0]>1 && $picsizes[1]>1 && $picsizes[0]<10000  && $picsizes[1]<10000) {
+				$a=imagezoom($thisfile['tmp_name'], $thisfile['tmp_name'], $picsizes[0], $picsizes[1], '#FFFFFF');
+			}
+			if (move_uploaded_file($thisfile['tmp_name'], $file_path) === false) {
+				$thisfile['error']="上传文件失败。";
+			}else {
+				@chmod($file_path, 0644);
+			}
+		}
+	}
+	$allfiles[$filekey]=$thisfile;
+	if(!empty($thisfile['error'])) {
+		$allerror.=$thisfile['name'].':'.$thisfile['error']."\\r\\n";
+	}
+}
+@header('Content-type: text/html; charset=UTF-8');
+if(isset($_GET['inputname'])) {
+	foreach($allfiles as $thisfile) {
+		if(empty($thisfile['error'])) {
+			echo("<script type=\"text/javascript\">parent.window.document.form1.".$_GET['inputname'].".value='".$thisfile['save_url']."';</script>");
+			if($multiple_upload) {
+				echo("<script type=\"text/javascript\">parent.window.document.form1.".$_GET['inputname'].".click();</script>");
+			}
+		}
+	}
+	if(!empty($allerror)) {
+		echo('<script language="javascript">window.alert("'.$allerror.'");</script>');
+		echo("<meta http-equiv=refresh content='0; url=?buttonvalue=继续上传&inputname=".$_GET['inputname']."&picsize=".$picsize."'>");
+		die();
+	}
+	if($multiple_upload) {
+		echo("<meta http-equiv=refresh content='0; url=?buttonvalue=继续上传&inputname=".$_GET['inputname']."&picsize=".$picsize."'>");
+	}else {
+		echo("<meta http-equiv=refresh content='0; url=?buttonvalue=上传成功&inputname=".$_GET['inputname']."&picsize=".$picsize."'>");
+	}
+	die();
+}
+if(empty($allerror)) {
+	echo(json_encode(array('error' => 0,'success' => 1, 'url' => $allfiles[0]['save_url'],'message'=>'')));
+}else {
+	$allerror=str_replace("\\r\\n","",$allerror);
+	echo(json_encode(array('error' => $allerror,'success' => 0, 'url' => '','message'=>$allerror)));
+}
+die();
+
+function alert($msg) {
+	@header('Content-type: text/html; charset=UTF-8');
+	global $picsize;
+	if(isset($_GET['inputname'])) {
+		echo('<script language="javascript">window.alert("'.$msg.'");</script>');
+		echo("<meta http-equiv=refresh content='0; url=?buttonvalue=上传失败&inputname=".$_GET['inputname']."&picsize=".$picsize."'>");
+		die();
+	}
+	echo(json_encode(array('error' => 1, 'message' => $msg)));
+	exit;
+}
+function ucms_fileupload_error($file) {
+	switch($file['error']){
 		case '1':
 			$error = '超过系统允许的大小。';
 			break;
@@ -112,113 +266,10 @@ if (!empty($_FILES['imgFile']['error'])) {
 		case '8':
 			$error = 'File upload stopped by extension。';
 			break;
-		case '999':
 		default:
-			$error = '未知错误。';
+			$error = '';
 	}
-	alert($error);
-}
-if(!isset($_FILES['imgFile'])) {
-	alert('上传错误');
-}else {
-	$file_name = $_FILES['imgFile']['name'];
-	$tmp_name = $_FILES['imgFile']['tmp_name'];
-	$file_size = $_FILES['imgFile']['size'];
-	if (!$file_name) {
-		alert("请选择文件。");
-	}
-	if (@is_dir($save_path) === false) {
-		alert("上传目录不存在。");
-	}
-	if (@is_writable($save_path) === false) {
-		alert("上传目录没有写权限。");
-	}
-	if (@is_uploaded_file($tmp_name) === false) {
-		alert("上传失败。");
-	}
-	if ($file_size > $max_size) {
-		alert("上传文件大小超过限制。");
-	}
-	$temp_arr = explode(".", $file_name);
-	$file_ext = array_pop($temp_arr);
-	$file_ext = strtolower(trim($file_ext));
-
-	foreach($ext_arr as $key=>$val) {
-		if(in_array($file_ext, $val)) {
-			$dir_name=$key;
-			break;
-		}
-	}
-	if(!isset($dir_name)) {
-		alert("上传文件扩展名是不允许的扩展名。");
-	}
-	if (in_array($file_ext, $ext_arr[$dir_name]) === false) {
-		alert("上传文件扩展名是不允许的扩展名。");
-	}
-	//ajax粘帖上传blob改成png
-		if($file_ext=='blob') {
-			$file_ext='png';
-		}
-	if ($dir_name !== '') {
-		$save_path .= $dir_name . DIRECTORY_SEPARATOR;
-		$save_url .= $dir_name . "/";
-		if (!file_exists($save_path)) {
-			mkdir($save_path);
-		}
-	}
-	$ymd = date("Ymd");
-	$save_path .= $ymd . DIRECTORY_SEPARATOR;
-	$save_url .= $ymd . "/";
-	if (!file_exists($save_path)) {
-		mkdir($save_path);
-	}
-	$new_file_name = substr(md5(time().rand(10000, 99999)),0,9) .'.'.$file_ext;
-	$file_path = $save_path . $new_file_name;
-	$save_url .=$new_file_name;
-	$picsizes=explode('_',$picsize);
-	$a=false;
-	if($dir_name=='image' && isset($picsizes[0]) && isset($picsizes[1]) && $picsizes[0]>1 && $picsizes[1]>1 && $picsizes[0]<10000  && $picsizes[1]<10000) {
-		$a=imagezoom($tmp_name, $file_path, $picsizes[0], $picsizes[1], '#FFFFFF');
-		if($a==='ext error') {
-			$a=false;
-		}else {
-			if(!$a) {
-				alert("生成缩略图失败");
-			}
-		}
-	}
-	if(!$a) {
-		if (move_uploaded_file($tmp_name, $file_path) === false) {
-			alert("上传文件失败。");
-		}
-	}
-	
-	@chmod($file_path, 0644);
-	@header('Content-type: text/html; charset=UTF-8');
-	if(isset($_GET['inputname'])) {
-		$errormsg='';
-		echo("<script type=\"text/javascript\">parent.window.document.form1.".$_GET['inputname'].".value='".$save_url."';</script>");
-		if(stripos($_GET['inputname'],'_multiple_upload')>0) {
-			echo("<script type=\"text/javascript\">parent.window.document.form1.".$_GET['inputname'].".click();</script>");
-			echo("<meta http-equiv=refresh content='0; url=?buttonvalue=继续上传&inputname=".$_GET['inputname']."&picsize=".$picsize."'>");
-		}else {
-			echo("<meta http-equiv=refresh content='0; url=?buttonvalue=上传成功&inputname=".$_GET['inputname']."&picsize=".$picsize."'>");
-		}
-		die();
-	}
-	echo(json_encode(array('error' => 0,'success' => 1, 'url' => $save_url,'message'=>'')));
-	exit;
-}
-function alert($msg) {
-	@header('Content-type: text/html; charset=UTF-8');
-	global $picsize;
-	if(isset($_GET['inputname'])) {
-		echo('<script language="javascript">window.alert("'.$msg.'");</script>');
-		echo("<meta http-equiv=refresh content='0; url=?buttonvalue=上传失败&inputname=".$_GET['inputname']."&picsize=".$picsize."'>");
-		die();
-	}
-	echo(json_encode(array('error' => 1, 'message' => $msg)));
-	exit;
+	Return $error;
 }
 function imagezoom( $srcimage, $dstimage,  $dst_width, $dst_height, $backgroundcolor ) {
 	$dstimg = imagecreatetruecolor( $dst_width, $dst_height );

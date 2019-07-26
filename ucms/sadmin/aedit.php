@@ -83,6 +83,7 @@ foreach($inputkindarray as $val) {
 		echo('<option rel="'.$val['setting'].'" rev="'.$val['strfrom'].'" alt="'.$val['tips'].'" columnkind="'.md5($val['kind']).'" value="'.$val['id'].'" selected>'.$val['name'].'</option>'."\r\n");
 		$defaultcolumntips=($val['tips']);
 		$defaultcolumnstrfrom=$val['strfrom'];
+		$defaultcolumnkind=md5($val['kind']);
 		if($val['strfrom']==1) {$moresetting1='';$moresetting2='none';}elseif($val['strfrom']==2) {$moresetting1='none';$moresetting2='';}
 	}else {
 		echo('<option rel="'.$val['setting'].'" rev="'.$val['strfrom'].'" alt="'.$val['tips'].'" columnkind="'.md5($val['kind']).'" value="'.$val['id'].'">'.$val['name'].'</option>'."\r\n");

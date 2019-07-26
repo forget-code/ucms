@@ -590,7 +590,7 @@ p.dtexttrdel{
 .uploadfileiframe{
 	border:0px;
 	height:30px;
-	width:75px;
+	width:125px;
 	margin:0 5px;
 	vertical-align:top;
 }
@@ -634,10 +634,17 @@ display:none;
 	display:none;
 	z-index: 111;
 	position: absolute;
-	width:150px;
+	width:170px;
 	background:#eee;
 	padding:5px;
 	border:1px #ccc solid;
+	text-align:center;
+}
+.time_function p{
+	text-align:center;
+	margin-bottom:5px;
+	color:red;
+	display:none;
 }
 #aritclemovechannel{display:none}
 .allarticlechose_list li{
@@ -645,3 +652,9 @@ display:none;
 	max-width:500px;
 }
 .input_tips{color:red;}
+.input5_pic_preview{
+	position:absolute;overflow:hidden;text-align:center;padding:10px;z-index:121212;display:none;
+}
+.input5_pic_preview img{
+	max-width:500px;
+}

@@ -28,6 +28,7 @@ function check_admin_file($dir,$file) {
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>后台管理中心</title>
+<meta name="referrer" content="origin-when-cross-origin">
 <link href="img/admin.css" rel="stylesheet" type="text/css">
 <script src="img/jquery.min.js"></script>
 <script src="img/js.js"></script>

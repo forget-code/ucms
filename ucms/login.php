@@ -1,7 +1,9 @@
 <?php
+ob_start();
 define('loginpage',1);
 require('../inc/config.php');
 require('chk.php');
+ob_clean();
 if(isset($_GET['do'])=='out') {
 	checktoken();
 	setadminname('');

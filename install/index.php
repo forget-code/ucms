@@ -4,7 +4,8 @@ require('../inc/config.php');
 if((isset($site_db) && is_array($site_db))) {
 	echo('<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="robots" content="noindex,nofollow,nosnippet,noarchive">');
 	function ifcachephpcode() {
-		$array=get_loaded_extensions();
+		$array=@get_loaded_extensions();
+		if($array==false) {$array=array();}
 		$cached=false;
 		foreach($array as $key=>$val) {
 			$val=strtolower($val);
@@ -26,7 +27,10 @@ if(isset($_GET['databasetest'])) {
 	}
 	exit();
 }
-$extension=get_loaded_extensions();
+$extension=@get_loaded_extensions();
+if($extension==false) {
+	$extension=array();
+}
 function ext_exist($extname,$returnkind=0) {
 	global $extension;
 	if(in_array($extname,$extension)) {
@@ -84,6 +88,9 @@ if($step==0) {
 		$info.='貌似已经安装过了,如果一直出现安装页面,请更新OPcache等组件的缓存<br><a href="../ucms/">点此登陆后台</a>';
 	}
 	if(!ext_exist('mysql',1) && !ext_exist('pdo_mysql',1) && !ext_exist('pdo_sqlite',1)) {
+		if(count($extension)==0) {
+			$info.='get_loaded_extensions函数被禁用,无法判断是否能安装<br>';
+		}
 		$info.='当前空间不支持系统所需的数据库连接方式,无法进行安装<br>';
 		$disableinstall=1;
 	}

@@ -23,7 +23,7 @@ if(isset($_GET['cid']) && $_GET['cid']>0) {
 		if($link['ckind']==2) {
 			echo('<a style="margin-left:10px" href="?do=sadmin_aindex&cid='.$cid.'" class="actionBtn">字段管理</a>');
 		}
-		echo('<a href="?do=sadmin_cedit&cid='.$cid.'" class="actionBtn">栏目设置</a>');
+		echo('<a href="?do=sadmin_cedit&cid='.$cid.'" class="actionBtn">栏目配置</a>');
 	}else {
 		echo('<a style="margin-left:10px" href="?do=sadmin_cout&cid=0&nohtml=1" class="actionBtn">导出站点变量</a>');
 	}

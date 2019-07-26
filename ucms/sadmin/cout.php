@@ -93,7 +93,7 @@ function filedownload($filename,$filecontent) {
 				<input type="text" name="cnote" value="<?php echo($csetting['cnote']);?>" size="80"  class="inputtext">
 				</td></tr>
 			<tr><td width="100" align="right">导出配置</td><td align="left">
-			<label><input type="checkbox" name="info" checked>栏目设置</label>
+			<label><input type="checkbox" name="info" checked>栏目配置</label>
 			<label><input type="checkbox" name="moudle" checked>栏目字段</label>
 			<label><input type="checkbox" name="str" checked>栏目变量</label>
 

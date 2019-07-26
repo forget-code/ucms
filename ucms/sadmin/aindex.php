@@ -53,7 +53,7 @@ $someonenotadd=0;
 		echo('<a style="margin-left:10px" href="?do=sadmin_aindex&cid='.$cid.'" class="actionBtn">字段管理</a>');
 	}
 	?>
-		<a href="?do=sadmin_cedit&cid=<?php echo($cid);?>" class="actionBtn">栏目设置</a>
+		<a href="?do=sadmin_cedit&cid=<?php echo($cid);?>" class="actionBtn">栏目配置</a>
 	<?php echo($cname);?> <i>字段管理</i></h3>
 
 <form method="post" action="?do=sadmin_aaddpost" id="form1" name="form1">

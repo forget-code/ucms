@@ -29,11 +29,13 @@ if(stripos($id,'_')===false) {
 	if($thiscid && power('s',$thiscid,$power)) {//有权限
 		$delsql='';//如果栏目开通了普通用户只能管理自己的文章
 		if(power('sadmin',0) || power('s',$cid,$power,5)) {}else {if(isset($csetting['listadminuid']) && $csetting['listadminuid']==1) {$delsql=" and adminuid='$myadminuid'";}}//普通用户只能编辑自己的文章
+		$thisid=$id;
+		run_admin_hook($cid,'delete');
 		$query = $GLOBALS['db'] -> query("delete from `$articletable` WHERE id='$id' and cid='$thiscid'$delsql");
 		if($query) {
 			$msg="删除成功";
 			$thisid=$id;//把id给thisid
-			run_admin_hook($cid,'del');
+			run_admin_hook($cid,'deleted');
 		}else {
 			$msg="删除失败";
 		}
@@ -59,10 +61,12 @@ if(stripos($id,'_')===false) {
 	foreach ($ids as $value) 
 	{
 		$value=intval($value);
+		$thisid=$value;
+		run_admin_hook($cid,'delete');
 		$query = $GLOBALS['db'] -> query("delete from `$articletable` WHERE id='$value' and cid='$cid'$delsql");
 		if($query) {
 			$thisid=$value;//把当前value给thisid,方便del函数调用
-			run_admin_hook($cid,'del');
+			run_admin_hook($cid,'deleted');
 		}
 	}
 	if(!isset($_SERVER["HTTP_REFERER"])) {$_SERVER["HTTP_REFERER"]='';}

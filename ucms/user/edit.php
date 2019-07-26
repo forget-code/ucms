@@ -212,7 +212,7 @@ $(function(){
 			});
 			if (onechecked==2)
 			{
-				$(this).parent().parent().find("input:first").prop('checked',false);
+				//$(this).parent().parent().find("input:first").prop('checked',false);
 			}
 		}
 	});

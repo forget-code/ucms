@@ -37,8 +37,8 @@ adminchannelscache();
 </div>
 <div id="ULeft">
 <div id="menu">
-<ul>
 <?php if(power('s',0)) {?>
+<ul>
 <li<?php if((!isset($_GET['cid']) || $_GET['cid']==0) && isset($thisdo[0]) && $thisdo[0]=='str') {echo(' class="on"');}?>><a href="?do=str">站点设置</a></li>
 </ul>
 <?php }?>

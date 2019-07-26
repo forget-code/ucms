@@ -150,6 +150,9 @@ if(power('sadmin',0) && count($moudle)==0) {
 					?>
 					<input type="hidden" name="cid" value="<?php echo($cid);?>">
 					<input type="text" class="inputtext" style="width:180px" name="keyword" value="<?php if($keyword<>'') {echo(htmlspecialchars($_GET['keyword']));}?>" placeholder="">
+					<?php
+						run_admin_hook($cid,'listsearch');
+					?>
 					<input class="btnsearch" type="submit" value="搜索" />
 					</form>
 		</div>
@@ -245,7 +248,7 @@ $thismoudlearray=array();
 				run_admin_hook($cid,'listrow');
 				?>
             <tr>
-              <td align="center" ><input name="delpost" type="checkbox" value="<?php echo($article['id']);?>" title='<?php echo($article['id']);?>'/>
+              <td align="center" ><input name="delpost" class="delpost" type="checkbox" value="<?php echo($article['id']);?>" title='<?php echo($article['id']);?>'/>
              </td>
 			 <?php
 					
@@ -281,7 +284,12 @@ $thismoudlearray=array();
 						}elseif($thismoudle['mkind']==9)
 						 {
 							if(is_numeric(@$article[$thismoudle['mname']])) {
-								echo('<td width="150px" align="center">'.@date("Y-m-d H:i",@$article[$thismoudle['mname']]).'</td>');
+								$thisyear=strtotime(date('Y-01-01'));
+								if(@$article[$thismoudle['mname']]>=$thisyear) {
+									echo('<td width="150px" align="center">'.@date("m-d H:i",@$article[$thismoudle['mname']]).'</td>');
+								}else {
+									echo('<td width="150px" align="center">'.@date("Y-m-d H:i",@$article[$thismoudle['mname']]).'</td>');
+								}
 							}else {
 								echo('<td width="150px" align="center">'.@$article[$thismoudle['mname']].'</td>');
 							}
@@ -626,8 +634,8 @@ unset($article);
 		 ?>
           </table>
     <div class="action">
-		<a href="javascript:Sel('all','delpost')">全选</a>
-		<a href="javascript:Sel('no','delpost')">反选</a> 
+		<a href="javascript:select_article('all')">全选</a>
+		<a href="javascript:select_article('no')">反选</a> 
 	<?php
 		if((!isset($csetting['listnoedit']) || $csetting['listnoedit']==0) && isset($csetting['listarticlemove']) && $csetting['listarticlemove']==1 && power('s',$cid,$power,2)) {
 	?>
@@ -638,10 +646,15 @@ unset($article);
 	<?php
 		}
 	?>
+
+	<?php
+		run_admin_hook($cid,'listaction');
+	?>
+
     <?php
 		if((!isset($csetting['listnodel']) || $csetting['listnodel']==0) && power('s',$cid,$power,3)) {
 	?>
-			<a href="javascript:checkSubmit('delpost','?do=list_del<?php echo($articletableuri);?>&<?php echo(newtoken(2));?>')">删除</a>
+			<a href="javascript:select_article_submit('?do=list_del<?php echo($articletableuri);?>&<?php echo(newtoken(2));?>&cid=<?php echo($cid);?>','确认删除?')">删除</a>
 	<?php
 		}
 	?>
@@ -665,43 +678,7 @@ unset($article);
 </div>
 </div>
 <script type="text/javascript">
-function Sel(stype,na){
-	for(var i=0; i< document.getElementsByName(na).length;i++){
-	if(stype=='all') document.getElementsByName(na)[i].checked=true;
-		else 
-			if (document.getElementsByName(na)[i].checked==false)
-			{
-			document.getElementsByName(na)[i].checked=true;
-			}else{
-			document.getElementsByName(na)[i].checked=false;
-			}
-		
-	}
-}
-function checkSubmit(na,url)
-{
-	var str = '';
-	for(var i=0;i < document.getElementsByName(na).length;i++)
-	{
-	if(document.getElementsByName(na)[i].checked){
-	if(str=='') str += document.getElementsByName(na)[i].value;
-	else str += '_' + document.getElementsByName(na)[i].value;
-	}
-	}
-	if(str=='')
-	{
-		alert('你没选择任何内容！');
-		return false;
-	}
-	else
-	{
-		if (confirm('是否确认提交？')){
-			window.location.href=url+"&cid=<?php echo($cid);?>&id="+str;
-		}else{
-			return false
-		}
-	}
-}
+
 $(function(){
 	if ($(".admin_list_action_td:last").html().length<10)
 	{

@@ -48,6 +48,7 @@ function checktoken() {
 	if(isset($_COOKIE['token_'.cookiehash]) && $_COOKIE['token_'.cookiehash]==$token) {
 		Return true;
 	}else {
+		if(defined('loginpage')) {die('no token');}
 		adminmsg('','非法提交,请联系管理员',3);
 	}
 }
@@ -126,15 +127,15 @@ array('id'=>'6',	'name'=>'多图上传',				'kind'=>'text',			'setting'=>0),
 array('id'=>'7',	'name'=>'数字/排序',			'kind'=>'int',			'setting'=>0),
 array('id'=>'9',	'name'=>'时间',					'kind'=>'int',			'setting'=>0),
 array('id'=>'26',	'name'=>'勾选框(是否)',			'kind'=>'int',			'setting'=>0),
-array('id'=>'12',	'name'=>'单选框',				'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'请配置字段数据来源'),
-array('id'=>'10',	'name'=>'多选框',				'kind'=>'varchar',		'setting'=>1,	'strfrom'=>1,	'tips'=>'请配置字段数据来源'),
-array('id'=>'15',	'name'=>'多选框(搜索)',			'kind'=>'varchar',		'setting'=>1,	'strfrom'=>1,	'tips'=>'请配置字段数据来源'),
-array('id'=>'11',	'name'=>'列表框',				'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'请配置字段数据来源'),
-array('id'=>'8',	'name'=>'列表框(树形)',			'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'请配置字段数据来源,来源栏目下必须有fid字段'),
-array('id'=>'14',	'name'=>'列表框(搜索)',			'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'请配置字段数据来源'),
-array('id'=>'17',	'name'=>'列表框(联动)',			'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'请配置字段数据来源,来源栏目下必须有fid字段'),
-array('id'=>'21',	'name'=>'文章单选',				'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'请配置字段数据来源'),
-array('id'=>'22',	'name'=>'文章多选',				'kind'=>'varchar',		'setting'=>1,	'strfrom'=>1,	'tips'=>'请配置字段数据来源'),
+array('id'=>'12',	'name'=>'单选框',				'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'字段数据来源'),
+array('id'=>'10',	'name'=>'多选框',				'kind'=>'varchar',		'setting'=>1,	'strfrom'=>1,	'tips'=>'字段数据来源'),
+array('id'=>'15',	'name'=>'多选框(搜索)',			'kind'=>'varchar',		'setting'=>1,	'strfrom'=>1,	'tips'=>'字段数据来源'),
+array('id'=>'11',	'name'=>'列表框',				'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'字段数据来源'),
+array('id'=>'8',	'name'=>'列表框(树形)',			'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'字段数据来源,来源栏目下必须有fid字段'),
+array('id'=>'14',	'name'=>'列表框(搜索)',			'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'字段数据来源'),
+array('id'=>'17',	'name'=>'列表框(联动)',			'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'字段数据来源,来源栏目下必须有fid字段'),
+array('id'=>'21',	'name'=>'文章单选',				'kind'=>'int',			'setting'=>1,	'strfrom'=>1,	'tips'=>'字段数据来源'),
+array('id'=>'22',	'name'=>'文章多选',				'kind'=>'varchar',		'setting'=>1,	'strfrom'=>1,	'tips'=>'字段数据来源'),
 array('id'=>'27',	'name'=>'文章多选(全站)',		'kind'=>'varchar',		'setting'=>0),
 array('id'=>'28',	'name'=>'栏目单选',				'kind'=>'int',			'setting'=>0),
 array('id'=>'29',	'name'=>'栏目多选',				'kind'=>'varchar',		'setting'=>0),
@@ -142,7 +143,7 @@ array('id'=>'16',	'name'=>'颜色选择器',			'kind'=>'varchar',		'setting'=>0)
 array('id'=>'18',	'name'=>'TAGS(竖)',				'kind'=>'text',			'setting'=>0),
 array('id'=>'19',	'name'=>'TAGS(横)',				'kind'=>'text',			'setting'=>0),
 array('id'=>'23',	'name'=>'地图坐标',				'kind'=>'varchar',		'setting'=>0),
-array('id'=>'30',	'name'=>'自定义',				'kind'=>'varchar',		'setting'=>1,	'strfrom'=>2,	'tips'=>'请输入自定义函数名 帮助:http://uuu.la/help/diyinput.html'),
+array('id'=>'30',	'name'=>'自定义',				'kind'=>'varchar',		'setting'=>1,	'strfrom'=>2,	'tips'=>'自定义函数名 帮助:http://uuu.la/help/diyinput.html'),
 );
 $notallowfield=array('id','posttime','cid','adminuid','rowstyle','stepstyle','rowurl','link','refererurl','articletable','like','add','all','alter','as','and','asc'
 ,'before','between','bigint','binary','blob','both','by','call','cascade','case','change','char','check','column','create'
@@ -401,20 +402,20 @@ function adminpagelist($recordcount,$pagesize,$curpage,$pages,$url)
 }
 function admin_nav($cidarray) {
 	global $cid;
-	$str='<b>></b><strong>'.$cidarray['cname'].'</strong>';
+	$str='<b>&gt;</b><strong>'.$cidarray['cname'].'</strong>';
 	$i=0;
 	while($cidarray['fid']<>0) {
 		$cidarray=adminchannel($cidarray['fid']);
 		if($cidarray['ckind']==1) {
-			$str='<b>></b><strong><a href="?do=str&cid='.$cidarray['cid'].'">'.$cidarray['cname'].'</a></strong>'.$str;
+			$str='<b>&gt;</b><strong><a href="?do=str&cid='.$cidarray['cid'].'">'.$cidarray['cname'].'</a></strong>'.$str;
 		}elseif($cidarray['ckind']==2) {
-			$str='<b>></b><strong><a href="?do=list&cid='.$cidarray['cid'].'">'.$cidarray['cname'].'</a></strong>'.$str;
+			$str='<b>&gt;</b><strong><a href="?do=list&cid='.$cidarray['cid'].'">'.$cidarray['cname'].'</a></strong>'.$str;
 		}elseif($cidarray['ckind']==3){
-			$str='<b>></b><strong><a href="?do=str&cid='.$cidarray['cid'].'">'.$cidarray['cname'].'</a></strong>'.$str;
+			$str='<b>&gt;</b><strong><a href="?do=str&cid='.$cidarray['cid'].'">'.$cidarray['cname'].'</a></strong>'.$str;
 		}elseif($cidarray['ckind']==4) {
-			$str='<b>></b><strong><a href="'.$cidarray['cvalue'].'">'.$cidarray['cname'].'</a></strong>'.$str;
+			$str='<b>&gt;</b><strong><a href="'.$cidarray['cvalue'].'">'.$cidarray['cname'].'</a></strong>'.$str;
 		}elseif($cidarray['ckind']==5) {
-			$str='<b>></b><strong><a href="'.get_transit_channel($cidarray['cid'],2).'">'.$cidarray['cname'].'</a></strong>'.$str;
+			$str='<b>&gt;</b><strong><a href="'.get_transit_channel($cidarray['cid'],2).'">'.$cidarray['cname'].'</a></strong>'.$str;
 		}
 		$i++;
 		if($i>66) {
@@ -525,6 +526,9 @@ function adminchannelscache() {
 }
 function adminchannel($cid) {
 	global $channels;
+	if(!isset($channels) || count($channels)==0) {
+		Return false;
+	}
 	foreach($channels as $key=>$val) {
 		if($val['cid']==$cid) {
 			Return $val;

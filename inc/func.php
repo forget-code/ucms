@@ -946,10 +946,12 @@ function nav($where=0) {
 	}
 }
 function cnav($cid='',$returnarray=false,$linktag=' &gt; ',$homepage=SystemDir) {
-	if(defined('cid')) {
-		$cid=cid;
-	}else {
-		$cid=0;
+	if(empty($cid)) {
+		if(defined('cid')){
+			$cid=cid;
+		}else {
+			$cid=0;
+		}
 	}
 	$channels=getchannelscache();
 	$breadcrumb='';
@@ -1290,7 +1292,8 @@ function nohtml($html){
 function text($str,$length=10) {
 	Return cut_str(nohtml($str), $length);
 }
-function go($url,$time=0) {
+function go($url='',$time=0) {
+	if(empty($url) && isset($_SERVER['HTTP_REFERER'])) {$url=htmlspecialchars($_SERVER['HTTP_REFERER']);}
 	echo("<meta http-equiv=refresh content='".$time."; url=".$url."'>");
 	die();
 }
@@ -1309,12 +1312,17 @@ function cacheset($keyname,$value,$overtime=604800,$keykind='') {
 	if(!is_dir(dirname($filename))) {
 		createDir(dirname($filename));
 	}
-	$fp = fopen($filename,"w");
-	if(!fwrite($fp,$value)){
-		fclose($fp);
+	$fp = @fopen($filename,"w");
+	if($fp===false) {
+		echo($filename.' permission denied');
 		Return false;
 	}
-	fclose($fp);
+	if(@fwrite($fp,$value)===false){
+		@fclose($fp);
+		echo($filename.' permission denied');
+		Return false;
+	}
+	@fclose($fp);
 	Return true;
 }
 function cachedel($keyname,$keykind='') {
