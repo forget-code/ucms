@@ -37,7 +37,7 @@ $sql1='';
 $sql2='';
 foreach ($moudle as $value) 
 {
-	$thismoudlevalue=dbstr(inputvalue($value));
+	$thismoudlevalue=inputvalue($value);
 	$thismsetting=json_decode($value['msetting'],1);
 	$thismsetting['ifonly']=$value['ifonly'];
 	$thismsetting['tablename']=$articletable;
@@ -47,7 +47,7 @@ foreach ($moudle as $value)
 	if($acheck==='long') {adminmsg('',$value['minfo'].' 输入太长',3);}
 	if($acheck==='exist') {adminmsg('',$value['minfo'].': '.htmlspecialchars($thismoudlevalue).' 已存在',3);}
 	$sql1.=',`'.$value['mname'].'`';
-	$sql2.=",'".$thismoudlevalue."'";
+	$sql2.=",'".dbstr($thismoudlevalue)."'";
 }
 //非管理员提交时管理员字段值为默认值
 foreach($hidemoudle as $value) {
@@ -116,7 +116,11 @@ if($query) {
 		adminmsg($listurl,$msg,3,'列表页');
 	}else {
 		$editpageurl='?do=list_edit&id='.$thisid.'&cid='.$cid.$articletableuri;
-		$msg='提交成功'.',<a href="'.$listurl.'">返回列表页</a>,<a href="'.$editpageurl.'">编辑此文章</a>,<a href="'.$nextaddurl.'">继续增加</a>'.$copyurl;
+		$msg='提交成功'.',<a href="'.$listurl.'">返回列表页</a>';
+		if((isset($csetting['listnoedit']) && $csetting['listnoedit']==0) && power('s',$cid,$power,2)) {
+			$msg.=',<a href="'.$editpageurl.'">编辑此文章</a>';
+		}
+		$msg.=',<a href="'.$nextaddurl.'">继续增加</a>'.$copyurl;
 		run_admin_hook($cid,'addposted');
 		adminmsg($editpageurl,$msg,5,'列表页');
 	}

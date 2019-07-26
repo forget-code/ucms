@@ -216,6 +216,7 @@ function select_article(stype){
 			}
 		}
 	});
+	chose_article_count();
 }
 
 
@@ -249,4 +250,44 @@ function select_article_submit(url,tips)
 		}
 		
 	}
+}
+function list_chose_article(){//文章快捷键选择
+	var last_click=0;
+	$('.article_checkbox input').click(function(e){
+		if ($(this).prop('checked'))
+		{
+			if (e.shiftKey==1)
+			{
+				now_select_id=$('.article_checkbox input').index(this);
+				console.log(last_click+"|"+now_select_id);
+				if (last_click>now_select_id)
+				{
+					$('.article_checkbox input').each(function(index){
+						if (index>=now_select_id && index<=last_click){$(this).prop('checked',true);}
+					});
+				}else if(last_click<now_select_id){
+					$('.article_checkbox input').each(function(index){
+						if (index>=last_click && index<=now_select_id){$(this).prop('checked',true);}
+					});
+				}
+				last_click=now_select_id;
+			}else{
+				last_click=$('.article_checkbox input').index(this);
+			}
+		}
+		chose_article_count();
+	});
+}
+function chose_article_count(){
+	if ($('.article_checkbox input:checked').length>999)
+	{
+		thiscount=$('.article_checkbox input:checked').length;
+	}else if($('.article_checkbox input:checked').length>99){
+		thiscount="&nbsp;"+$('.article_checkbox input:checked').length;
+	}else if($('.article_checkbox input:checked').length>9){
+		thiscount="&nbsp;"+$('.article_checkbox input:checked').length+"&nbsp;";
+	}else{
+		thiscount="&nbsp;&nbsp;"+$('.article_checkbox input:checked').length+"&nbsp;&nbsp;";
+	}
+	$('.chose_article_count').html(thiscount);
 }

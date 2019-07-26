@@ -53,7 +53,8 @@ $default_channel_setting['default_2']='eyJpbmZvIjp7ImNpZCI6IjU3IiwiMCI6IjU3IiwiZ
 //leftnav 左侧栏目导航循环时
 //index 文章列表页表格之前,可以输出html
 //list 文章列表页读取文章列表之前,可以修改读取参数
-//listrow 文章列表页循环时
+//listrow 文章列表页文章循环时
+//listrowaction 文章列表页文章循环时 操作框内
 //listsearch 文章列表页搜索框
 //listaction 文章列表页批量勾选提交
 //add 文章添加页

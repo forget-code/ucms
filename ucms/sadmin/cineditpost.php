@@ -87,7 +87,6 @@ if(isset($_POST['cid'])) {
 					if(isset($thismoudle['strarray'])) {$thismoudlearray['strarray']=dbstr($thismoudle['strarray']);}else {$thismoudlearray['strarray']='';}
 					if(isset($thismoudle['strdefault'])) {$thismoudlearray['strdefault']=dbstr($thismoudle['strdefault']);}else {$thismoudlearray['strdefault']='';}
 					if(isset($thismoudle['mfunction'])) {$thismoudlearray['mfunction']=dbstr($thismoudle['mfunction']);}else {$thismoudlearray['mfunction']='';}
-					if(isset($thismoudle['mregular'])) {$thismoudlearray['mregular']=dbstr($thismoudle['mregular']);}else {$thismoudlearray['mregular']='';}
 					if(isset($thismoudle['msetting'])) {$thismoudlearray['msetting']=dbstr($thismoudle['msetting']);}else {$thismoudlearray['msetting']='';}
 					$thisid = $GLOBALS['db'] -> insert(tableex('moudle'),$thismoudlearray);
 				}

@@ -275,6 +275,8 @@ table.noborder td, table.noborder th {
 	background:#1c86d1;
 	color:#ffffff;
 }
+#list .action a{padding:0 3px}
+#list .action a.chose_article_count{width:100px}
 
 #mainBox {
 	border-left:1px solid #FFF;

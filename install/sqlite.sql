@@ -44,7 +44,6 @@ CREATE TABLE [uuu_moudle] (
 [strarray] VARCHAR(250)  NULL,
 [strdefault] VARCHAR(250)  NULL,
 [msetting] TEXT  NULL,
-[mregular] VARCHAR(50)  NULL,
 [mfunction] VARCHAR(50)  NULL
 );
 CREATE TABLE [uuu_str] (

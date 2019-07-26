@@ -169,20 +169,20 @@ function htmlinput($inputarray) {
 	Return true;
 }
 require('input/kses.php');
-function filterhtml($html,$value) {
-	if(power('alevel')==3 && ($value==1 || $value==2)) {
-		$value=0;
+function filterhtml($html,$filterhtml) {
+	if(power('alevel')==3 && ($filterhtml==1 || $filterhtml==2)) {
+		$filterhtml=0;
 	}
-	if($value==0) {
+	if($filterhtml==0) {
 		Return $html;
 	}
-	if($value==1) {
+	if($filterhtml==1) {
 		Return kses($html);
 	}
-	if($value==2) {
+	if($filterhtml==2) {
 		Return htmlspecialchars($html);
 	}
-	if($value==4) {
+	if($filterhtml==4) {
 		Return intval($html);
 	}
 	Return $html;
@@ -204,7 +204,7 @@ function inputvalue($moudle) {
 	global $_POST;
 	$othersetting=json_decode($moudle['msetting'],1);
 	if(!isset($othersetting['filterhtml'])) {
-		$filterhtml=0;
+		$filterhtml=1;//默认过滤危险html代码
 	}else {
 		$filterhtml=$othersetting['filterhtml'];
 	}
@@ -468,6 +468,14 @@ function admin_nav_list($cid,$son=0) {
 	}
 }
 function adminmsg($url,$msg,$s=3,$pagename='列表页') {
+	if(isset($_GET['nohtml']) && $_GET['nohtml']) {
+		echo('<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">');
+		echo($msg);
+		if(!empty($url)) {
+			go($url,$s);
+		}
+		exit;
+	}
 	echo('<script>$(function(){$(document).keydown(function(event){var ctrlc = event.which;var key=ctrlc-48;if (key>0 && key<10){keygourl=$(\'.AdminMsg\').find(\'a\').eq(key-1).attr(\'href\');if (keygourl.length>3){window.location.href=keygourl;}}});});</script>');
 	if($url=='') {
 		echo('<div id="UMain"><div id="urHere"><em class="homeico"></em>后台管理<b>&gt;</b><strong>信息提示</strong> </div> <div id="mainBox"><h3>信息提示</h3><div class="AdminMsg"><h2>'.$msg.'</h2><dl><dt>请<a href="javascript:history.go(-1);">返回</a>。</dt><dd><a href="javascript:history.go(-1);">返回上一页</a></dd></dl></div></div></div>');

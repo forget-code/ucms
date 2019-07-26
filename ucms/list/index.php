@@ -43,9 +43,7 @@ if(isset($_GET['articletable']) && !empty($_GET['articletable'])) {
 if(isset($csetting['temppage_order']) && strlen($csetting['temppage_order'])>5) {
 	$ordersql=$csetting['temppage_order'];
 }else {
-	//取出排序字段名字
-	$ordername = $GLOBALS['db'] -> fetchcount("SELECT mname FROM ".tableex('moudle')." where cid='$cid' and mkind=7 limit 1");
-	if($ordername) {$ordersql=$ordername.' desc,id desc';}else {$ordersql='id desc';}
+	$ordersql='id desc';
 }
 //管理员字段
 if(power('sadmin',0) || power('s',$cid,$power,5)) {
@@ -248,7 +246,7 @@ $thismoudlearray=array();
 				run_admin_hook($cid,'listrow');
 				?>
             <tr>
-              <td align="center" ><input name="delpost" class="delpost" type="checkbox" value="<?php echo($article['id']);?>" title='<?php echo($article['id']);?>'/>
+              <td align="center" class="article_checkbox"><input name="delpost" class="delpost" type="checkbox" value="<?php echo($article['id']);?>" title='<?php echo($article['id']);?>'/>
              </td>
 			 <?php
 					
@@ -615,6 +613,7 @@ $thismoudlearray=array();
 					$targettitle=@$article[$articlemname];
 					echo('<a href="javascript:;"onclick="this.style.color=\'#ccc\';allarticleschoose(\''.$allarticleschoose.'\',\''.$targetid.'\',\''.$targettitle.'\');" class="allarticleschoosetip" style="color:#0000FF" rel="'.$targetid.'_'.$cid.'">选择</a> &nbsp;');
 				}
+				run_admin_hook($cid,'listrowaction');
 				if((!isset($csetting['listnoedit']) || $csetting['listnoedit']==0) && power('s',$cid,$power,2)) {
 					echo('<a href="?do=list_edit&id='.$article['id'].'&cid='.$cid.$articletableuri.$articleschooseuri.$moudleiduri.'">编辑</a> &nbsp;&nbsp;');
 				}
@@ -634,6 +633,7 @@ unset($article);
 		 ?>
           </table>
     <div class="action">
+		已选 <a class="chose_article_count">&nbsp;&nbsp;0&nbsp;&nbsp;</a> 项
 		<a href="javascript:select_article('all')">全选</a>
 		<a href="javascript:select_article('no')">反选</a> 
 	<?php
@@ -659,6 +659,7 @@ unset($article);
 		}
 	?>
     </div>
+
 	<div class="pager">
 	总计 <?php echo($articles['pagecount']);?> 个记录，
 	每页 <input type="text" name="pagesize" id="pagesize" value="<?php echo($where['pagesize']);?>" autocomplete="off"> 条
@@ -678,7 +679,7 @@ unset($article);
 </div>
 </div>
 <script type="text/javascript">
-
+list_chose_article();
 $(function(){
 	if ($(".admin_list_action_td:last").html().length<10)
 	{
@@ -722,7 +723,7 @@ $(function(){
 	$('#aritclemovechannel').change(function(){
 		if ($(this).val()>0 && $(this).val()!=<?php echo($cid);?>)
 		{
-			a=checkSubmit('delpost','?do=list_move&targetcid='+$(this).val()+'&<?php echo($articletableuri);?>&<?php echo(newtoken(2));?>');
+			a=select_article_submit('?do=list_move&cid=<?php echo($cid);?>&targetcid='+$(this).val()+'&<?php echo($articletableuri);?>&<?php echo(newtoken(2));?>','转移选中的文章至目标栏目?');
 			if (a==false)
 			{
 				$('.articleMove').click();

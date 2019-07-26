@@ -46,7 +46,6 @@ CREATE TABLE `uuu_moudle` (
   `strarray` varchar(250) default NULL,
   `msetting` text,
   `strdefault` varchar(250) default NULL,
-  `mregular` varchar(250) default NULL,
   `mfunction` varchar(50) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

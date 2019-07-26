@@ -73,7 +73,6 @@ if($copyid>0) {
 }
 run_admin_hook($cid,'add');
 ?>
-<script charset="utf-8" src="img/kindeditor.js"></script>
 <div id="UMain">
   <!-- 当前位置 -->
 <div id="urHere"><em class="homeico"></em>后台管理<?php echo(admin_nav($link));?></div>   <div id="mainBox">

@@ -104,7 +104,11 @@ function alist($where='') {
 			$where['page']=1;
 		}
 	}
-
+	$nullarticle=array('list'=>array(),'pagecount'=>0,'pagesize'=>1,'page'=>1,);
+	if(!isset($where['cid']) && !defined('cid') && !isset($where['tablename']) && !isset($where['cids'])) {Return $nullarticle;}
+	if(!isset($where['tablename']) && !isset($where['cid']) && !isset($where['cids']) && defined('cid')) {$where['cid']=cid;}
+	if(!isset($where['cid'])) {$where['cid']=0;}
+	if(is_numeric($where['cid'])) {$where['cid']=intval($where['cid']);}
 	if(SiteCache && isset($where['cache']) && $where['cache']>0) {
 		$cachewhere=$where;
 		$cachehash=md5(json_encode($where));
@@ -112,11 +116,6 @@ function alist($where='') {
 		if ($res) {return json_decode($res,1);}
 	}
 	$sql='';
-	$nullarticle=array('list'=>array(),'pagecount'=>0,'pagesize'=>1,'page'=>1,);
-	if(!isset($where['cid']) && !defined('cid') && !isset($where['tablename']) && !isset($where['cids'])) {Return $nullarticle;}
-	if(!isset($where['tablename']) && !isset($where['cid']) && !isset($where['cids']) && defined('cid')) {$where['cid']=cid;}
-	if(!isset($where['cid'])) {$where['cid']=0;}
-	if(is_numeric($where['cid'])) {$where['cid']=intval($where['cid']);}
 	if($where['cid']!==0) {
 		$thischannelcache=getchannelcache($where['cid']);
 		if(!$thischannelcache) {Return $nullarticle;}
@@ -234,9 +233,12 @@ function alist($where='') {
 		}
 		$sql.=" )";
 	}
+	if(!empty($sql)) {
+		$sql='where'.ltrim($sql,'and ');
+	}
 	if(isset($where['page'])) {
 		$where['page']=intval($where['page']);
-		$where['pagecount'] = $GLOBALS['db'] -> fetchcount("SELECT count(id) FROM ".$where['tablename']." where 1=1 $sql");
+		$where['pagecount'] = $GLOBALS['db'] -> fetchcount("SELECT count(id) FROM ".$where['tablename']." $sql");
 		$where['articlecount']=$where['pagecount'];
 		$where['start']=($where['page']-1)*$where['pagesize'];
 		if($where['articlecount']%$where['pagesize']==0) {
@@ -254,7 +256,20 @@ function alist($where='') {
 		}
 	}
 	if(!isset($where['sql'])) {
-		$where['sql']='SELECT '.$where['column'].' FROM '.$where['tablename'].' where 1=1 '.$sql.' '.$where['order'].' limit '.$where['start'].','.$where['pagesize'];
+		$where['sql_id']='SELECT id FROM '.$where['tablename'].' '.$sql.' '.$where['order'].' limit '.$where['start'].','.$where['pagesize'];
+		$idquery =$GLOBALS['db'] -> query($where['sql_id']);
+		$ids = $GLOBALS['db'] -> fetchall($idquery);
+		$sql='id in(';
+		if(count($ids)>0) {
+			foreach($ids as $key=>$val) {
+				$sql.=$val[0].',';
+			}
+		}else {
+			$sql.='0,';
+		}
+		$sql=rtrim($sql,',');
+		$sql.=')';
+		$where['sql']='SELECT '.$where['column'].' FROM '.$where['tablename'].' where '.$sql.' '.$where['order'];
 	}
 	$query = $GLOBALS['db'] -> query($where['sql']);
 	$articles = $GLOBALS['db'] -> fetchall($query);

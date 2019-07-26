@@ -80,13 +80,13 @@ foreach($inputkindarray as $val) {
 	if(isset($val['strfrom'])) {$val['strfrom']=$val['strfrom'];}else {$val['strfrom']=0;}
 	if(!isset($val['tips'])) {$val['tips']="";}
 	if($val['id']==$link['mkind']) {
-		echo('<option rel="'.$val['setting'].'" rev="'.$val['strfrom'].'" alt="'.$val['tips'].'" columnkind="'.md5($val['kind']).'" value="'.$val['id'].'" selected>'.$val['name'].'</option>'."\r\n");
+		echo('<option rel="'.$val['setting'].'" rev="'.$val['strfrom'].'" alt="'.$val['tips'].'" columnkind="'.($val['kind']).'" value="'.$val['id'].'" selected>'.$val['name'].'</option>'."\r\n");
 		$defaultcolumntips=($val['tips']);
 		$defaultcolumnstrfrom=$val['strfrom'];
-		$defaultcolumnkind=md5($val['kind']);
+		$defaultcolumnkind=($val['kind']);
 		if($val['strfrom']==1) {$moresetting1='';$moresetting2='none';}elseif($val['strfrom']==2) {$moresetting1='none';$moresetting2='';}
 	}else {
-		echo('<option rel="'.$val['setting'].'" rev="'.$val['strfrom'].'" alt="'.$val['tips'].'" columnkind="'.md5($val['kind']).'" value="'.$val['id'].'">'.$val['name'].'</option>'."\r\n");
+		echo('<option rel="'.$val['setting'].'" rev="'.$val['strfrom'].'" alt="'.$val['tips'].'" columnkind="'.($val['kind']).'" value="'.$val['id'].'">'.$val['name'].'</option>'."\r\n");
 	}
 }
 $strarray=$link['strarray'];
@@ -110,7 +110,7 @@ if($defaultcolumnstrfrom==1) {
 		$('#mkind').change(function(){
 			if ($("#mkind").find("option:selected").attr('columnkind')!=defaultcolumnkind)
 			{
-				alert('更换后的字段类型与更换前的字段类型不一致,\r\n请在数据库表中更改此字段为相应的类型.\r\n取消更改请刷新当前页面');
+				alert('更换后的字段类型('+$("#mkind").find("option:selected").attr('columnkind')+')与更换前的字段类型('+defaultcolumnkind+')不一致,\r\n请手动在数据库中修改该字段类型为: '+$("#mkind").find("option:selected").attr('columnkind')+'\r\n取消更改请刷新当前页面');
 			}
 			$('.input_tips').text($("#mkind").find("option:selected").attr('alt'));
 			if ($("#mkind").find("option:selected").attr('rel')>0)

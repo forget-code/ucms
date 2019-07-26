@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 define('SystemRoot',dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR);
 define('IncDir',SystemRoot.'inc'.DIRECTORY_SEPARATOR);
 define('CacheDir',SystemRoot.'cache'.DIRECTORY_SEPARATOR);
-define('SystemDir','{systemdir}');//网站程序根目录,必须以/开始结束
+define('SystemDir','{systemdir}');//网站程序目录,必须以/开始结束
 define('SystemDomain','{systemdomain}');//网站域名 多个域名用;分隔
 define('AdminDir','ucms');//后台目录
 define('UploadDir','uploadfile');//上传目录

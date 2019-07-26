@@ -16,7 +16,6 @@ if(isset($_GET['cid'])) {
 }
 if(!power('s',$cid)) {adminmsg('','无权限');}
 ?>
-<script charset="utf-8" src="img/kindeditor.js"></script>
 <div id="UMain">
   <!-- 当前位置 -->
 <div id="urHere"><em class="homeico"></em>后台管理<?php 

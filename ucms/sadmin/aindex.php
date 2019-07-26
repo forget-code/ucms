@@ -76,7 +76,7 @@ $someonenotadd=0;
 	<td align=center>0</td>
 	<td  align=center>
 		<?php
-		if(stripos($articletablelist['sql'],'[id]')>0 || stripos($articletablelist['sql'],' id ')>0 || stripos($articletablelist['sql'],'"id"')>0) {
+		if(stripos($articletablelist['sql'],'[id]')>0 || stripos($articletablelist['sql'],' id ')>0 || stripos($articletablelist['sql'],'"id"')>0 || stripos($articletablelist['sql'],'"(id "')>0) {
 			echo('已建');
 		}else {
 			$someonenotadd=1;
@@ -141,7 +141,7 @@ foreach($links as $link) {
 	</td>
 	<td align=center>
 	<?php
-	if(stripos($articletablelist['sql'],'['.$link['mname'].']')>0 || stripos($articletablelist['sql'],' '.$link['mname'].' ')>0  || stripos($articletablelist['sql'],'"'.$link['mname'].'"')>0) {
+	if(stripos($articletablelist['sql'],'['.$link['mname'].']')>0 || stripos($articletablelist['sql'],' '.$link['mname'].' ')>0  || stripos($articletablelist['sql'],'"'.$link['mname'].'"')>0  || stripos($articletablelist['sql'],'"('.$link['mname'].' "')>0) {
 		echo('已建');
 		if($link['ifcreated']==0) {
 			$query = $GLOBALS['db'] -> query("UPDATE ".tableex('moudle')." SET ifcreated='1' WHERE id='".$link['id']."'");
@@ -156,10 +156,10 @@ foreach($links as $link) {
 ?>
 	</td>
 	<td align=center>
-<a href="?do=sadmin_aedit&cid=<?php echo($link['cid']);?>&id=<?php echo($link['id']);?>">配置</a>&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="?do=sadmin_code&cid=<?php echo($link['cid']);?>&id=<?php echo($link['id']);?>&kind=1">调用</a>&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="javascript:;"  onclick="javascript:confirmurl('?do=sadmin_adel&id=<?php echo($link['id']);?>&<?php newtoken(2);?>','确定删除[<?php echo($link['mname']);?>]吗？\r\n系统并不会在数据库中删除该字段\r\n请手动在数据库中删除');">删除</a>
-</td>
+		<a href="?do=sadmin_aedit&cid=<?php echo($link['cid']);?>&id=<?php echo($link['id']);?>">配置</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="?do=sadmin_code&cid=<?php echo($link['cid']);?>&id=<?php echo($link['id']);?>&kind=1">调用</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:;"  onclick="javascript:confirmurl('?do=sadmin_adel&id=<?php echo($link['id']);?>&<?php newtoken(2);?>','确定删除[<?php echo($link['mname']);?>]吗？\r\n系统并不会在数据库中删除该字段\r\n请手动在数据库中删除');">删除</a>
+	</td>
 </tr>
 <?php
 }
