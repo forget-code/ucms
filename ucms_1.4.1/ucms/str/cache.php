@@ -10,24 +10,9 @@ if(deldir(CacheDir)) {
 	if(channelrouter()==false) {
 		adminmsg('','写入路由配置失败',1);
 	}
-	adminmsg('','清空成功'.ifcachephpcode(),1);
+	adminmsg('','清空成功',1);
 }else {
 	adminmsg('','清空失败',1);
-}
-function ifcachephpcode() {
-	$array=get_loaded_extensions();
-	$cached=false;
-	foreach($array as $key=>$val) {
-		$val=strtolower($val);
-		if(stripos($val,'opcache')===false && stripos($val,'xcache')===false) {
-		}else {
-			$cached=true;
-		}
-		if($cached) {
-			Return ',如新增加或编辑的栏目不能访问,请清空opcache等组件的缓存';
-		}
-	}
-	Return '';
 }
 function deldir($dir) {
 	global $filecount;

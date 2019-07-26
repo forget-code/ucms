@@ -70,7 +70,8 @@ if(isset($_POST['uuu_addcsarticle'])) {
 		 foreach ($moudle as $value) 
 		{
 			$sql1.=',`'.$value['mname'].'`';
-			if($value['mname']=='title') {
+
+			if($value['mname']=='title' && $value['mkind']<3) {
 				$sql2.=",'".dbstr(inputvalue($value)).rand(1000,2000)."'";
 			}else {
 				$sql2.=",'".dbstr(inputvalue($value))."'";

@@ -12,7 +12,7 @@ if(isset($_POST['diyurl'])) {
 	$newurl=dbstr(json_encode($newurl));
 	$allurl = $GLOBALS['db'] -> one("SELECT * FROM ".tableex('str')." where strname='diyurl' and inputkind=0 limit 1;");
 	if(!$allurl) {
-		$query = $GLOBALS['db'] -> query("INSERT INTO `".tableex('str')."` (`strname`,`strcid`,`strorder`,`inputkind`,`strvalue`,`ifadmin`) VALUES ('diyurl','','0','0','$newurl','1');");
+		$query = $GLOBALS['db'] -> query("INSERT INTO `".tableex('str')."` (`strname`,`strcid`,`strorder`,`inputkind`,`strvalue`,`ifadmin`) VALUES ('diyurl','0','0','0','$newurl','1');");
 	}else {
 		$query = $GLOBALS['db'] -> query("UPDATE ".tableex('str')." SET strvalue='$newurl' WHERE strname='diyurl' and inputkind=0;");
 	}
@@ -40,7 +40,7 @@ if($allurl) {
 
 <form id="form1" method="post" action="?do=sadmin_url">
 <?php newtoken();?>
-		<table width="850px" border="0" cellpadding="8" cellspacing="0" class="tablerowtip" align=center>
+		<table width="870px" border="0" cellpadding="8" cellspacing="0" class="tablerowtip" align=center>
 		<?php
 			foreach($allurl as $key=>$val) {
 				?>
@@ -100,6 +100,10 @@ $(function(){
 		var filepath=$(this).prev().find('input').val();
 		if (filepath.length>0)
 		{
+			if (filepath.indexOf('.')<0)
+			{
+				filepath=filepath+'.php';
+			}
 			window.open ('?do=sadmin_fileedit&dir=<?php echo(SystemDir.TemplateDir);?>/&file='+filepath);
 		}else{
 			alert("请先填写模板文件路径");
@@ -107,7 +111,7 @@ $(function(){
 	});
 	$(document).on('click', '.chosetemplate', function() {
 		document.nowinputclickdom=$(this);
-		window.open ('?do=sadmin_file&&chosetemplate=1&dir=<?php echo(SystemDir.TemplateDir);?>');
+		window.open ('?do=sadmin_file&chosetemplate=1&dir=<?php echo(SystemDir.TemplateDir);?>');
 	});
 	$('.addotherpage').click(function(){
 		$('#otherpage').append($('#newotherpage').html());

@@ -165,8 +165,11 @@ if(power('sadmin',0) && count($moudle)==0) {
 	?>
 	<table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
 	<tr>
-	<th width="22" align="center">选</th>
+	
 	<?php
+		if($tablecreated) {
+			echo('<th width="22" align="center">选</th>');
+		}
 		foreach ($moudle as $value){
 				echo('<th align="center">'.$value['minfo'].'</th>');
 		}
@@ -230,7 +233,12 @@ if(!empty($articletable)) {$where['tablename']=$articletable;}
 if(power('sadmin',0) || power('s',$cid,$power,5)) {}else {if(isset($csetting['listadminuid']) && $csetting['listadminuid']==1) {$where['where']['adminuid']=$myadminuid;}}//普通用户只能编辑自己的文章
 run_admin_hook($cid,'list');
 $where['all']=0;
-$articles=alist($where);
+if($tablecreated) {
+	$articles=alist($where);
+}else {
+	$articles=array('list'=>array(),'pagecount'=>0,'pagesize'=>1,'page'=>1,);
+}
+
 $thismoudlearray=array();
 			foreach ($articles['list'] as $article)
 			{
@@ -243,7 +251,7 @@ $thismoudlearray=array();
 					
 				foreach ($moudle as $thismoudle) 
 				{
-					if($thismoudle['mname']=='title' && empty($thismoudle['ifshowtemp']) && isset($article['link']) && strlen(trim($article['link']))>1 && $ifshowthischannel) {
+					if($thismoudle['mname']=='title' && empty($thismoudle['ifshowtemp']) && isset($article['link']) && strlen(trim($article['link']))>1 && $ifshowthischannel && $thismoudle['mkind']<3) {
 						$thismoudle['ifshowtemp']='<a href="{link}" target="_blank">{title}</a>';
 					}
 					if(strlen($thismoudle['ifshowtemp'])>3) {

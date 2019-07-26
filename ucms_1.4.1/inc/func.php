@@ -8,7 +8,7 @@ function a($where) {
 		Return false;
 	}
 }
-function u($cid) {
+function u($cid='') {
 	if(empty($cid)) {
 		Return gethomeurl();
 	}
@@ -23,20 +23,22 @@ function s($strname,$cid='',$return=1) {
 function n($where=0) {
 	Return nav($where);
 }
-function c($kind=0,$num=9999,$fid=0) {
+function c($kind=0,$num=9999,$fid=0,$shownav=0) {
 	$channel=getchannelscache();
 	$newchannel=array();
 	$count=0;
 	foreach($channel as $val) {
 		if($fid==$val['fid']) {
-			if($kind==0) {
-				$newchannel[]=$val;
-				$count++;
-				$newchannel[count($newchannel)-1]['key']=$count;
-			}elseif($val['ckind']==$kind) {
-				$newchannel[]=$val;
-				$count++;
-				$newchannel[count($newchannel)-1]['key']=$count;
+			if($shownav==0 || ($shownav>0 && $val['ifshownav'])) {
+				if($kind==0) {
+					$newchannel[]=$val;
+					$count++;
+					$newchannel[count($newchannel)-1]['key']=$count;
+				}elseif($val['ckind']==$kind) {
+					$newchannel[]=$val;
+					$count++;
+					$newchannel[count($newchannel)-1]['key']=$count;
+				}
 			}
 		}
 		if($count==$num) {

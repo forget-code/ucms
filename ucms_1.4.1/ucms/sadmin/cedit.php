@@ -270,6 +270,10 @@ $(function(){
 		var filepath=$(this).prev().find('input').val();
 		if (filepath.length>0)
 		{
+			if (filepath.indexOf('.')<0)
+			{
+				filepath=filepath+'.php';
+			}
 			window.open ('?do=sadmin_fileedit&dir=<?php echo(SystemDir.TemplateDir);?>/&file='+filepath);
 		}else{
 			alert("请先填写模板文件路径");
@@ -277,7 +281,7 @@ $(function(){
 	});
 	$(document).on('click', '.chosetemplate', function() {
 		document.nowinputclickdom=$(this);
-		window.open ('?do=sadmin_file&&chosetemplate=1&dir=<?php echo(SystemDir.TemplateDir);?>');
+		window.open ('?do=sadmin_file&chosetemplate=1&dir=<?php echo(SystemDir.TemplateDir);?>');
 	});
 	$('.addotherpage').click(function(){
 		$('#otherpage').append($('#newotherpage').html());

@@ -20,11 +20,11 @@ if(isset($_GET['dir'])) {
 			$dir=$_GET['dir'];
 		}
 	}
-	$alldir=SystemRoot.$dir;
+	$alldir=$_SERVER['DOCUMENT_ROOT'].$dir;
 	if(stripos($_GET['dir'],'..')===false) {}else {die('error dir');}
 	$backdir=dirname($dir);
 }else {
-	$dir='/';
+	$dir=SystemDir;
 	$_GET['dir']=$dir;
 	$backdir=$_GET['dir'];
 	$getdir='/';
@@ -67,7 +67,7 @@ if(isset($_GET['delfile'])) {
 	}
 	if(stripos($_GET['deldir'],'..')===false) {}else {die('error dir');}
 	if(stripos($_GET['delfile'],'..')===false) {}else {die('error file');}
-	$delfile=SystemRoot.$_GET['deldir'].$_GET['delfile'];
+	$delfile=$alldir.$_GET['delfile'];
 	if(@unlink($delfile)) {
 		adminmsg($refererurl,'删除成功',0);
 	}else {
@@ -83,8 +83,8 @@ if(isset($_GET['newname'])) {
 	if(stripos($_GET['oldname'],'..')===false) {}else {die('error dir');}
 	if(stripos($_GET['newname'],'..')===false) {}else {die('error file');}
 	if(stripos($_GET['dirname'],'..')===false) {}else {die('error file');}
-	$oldname=SystemRoot.$_GET['dirname'].$_GET['oldname'];
-	$newname=SystemRoot.$_GET['dirname'].$_GET['newname'];
+	$oldname=$alldir.$_GET['oldname'];
+	$newname=$alldir.$_GET['newname'];
 	if(is_file($newname) || is_dir($newname)) {
 		adminmsg($refererurl,'新命名文件夹/文件已经存在',1);
 		exit();
@@ -103,7 +103,7 @@ if(isset($_FILES['uploadfile'])) {
 	}
 	if(stripos($_GET['dir'],'..')===false) {}else {die('error file');}
 	if(is_uploaded_file($_FILES['uploadfile']['tmp_name'])){
-		$filaname=SystemRoot.$_GET['dir'].'/'.$_FILES["uploadfile"]["name"];
+		$filaname=$alldir.$_FILES["uploadfile"]["name"];
 		if(@move_uploaded_file($_FILES['uploadfile']['tmp_name'],$filaname)) {
 			adminmsg($refererurl,'上传成功',0);
 		}else {

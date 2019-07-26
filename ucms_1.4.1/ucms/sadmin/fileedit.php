@@ -14,7 +14,7 @@ if(isset($_GET['dir'])) {
 	}else {
 		$dir=$_GET['dir'];
 	}
-	$alldir=SystemRoot.$_GET['dir'].'/';
+	$alldir=$_SERVER['DOCUMENT_ROOT'].$_GET['dir'].'/';
 	if(stripos($_GET['dir'],'..')===false) {}else {die('error dir');}
 }else {
 	die('no dir');

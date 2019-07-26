@@ -496,7 +496,7 @@ a{color:#0000FF;}
 			}
 		}
 		?>
-		<input type="text" name="systemdomain" id="systemdomain" size=40 value=""><i>多个用;分隔</i><br><i>域名必须填写正确，否则前台无法访问。不限制域名绑定则无需填写<!-- <?php echo(server_name());?><?php echo($otherdomain);?> --></i>
+		<input type="text" name="systemdomain" id="systemdomain" size=40 value=""><i>多个用;分隔</i><br><i>不限制域名访问则无需填写。绑定域名后只允许通过该域名访问。</i>
 		</td>
 	</tr>
 	<tr>
@@ -557,7 +557,7 @@ a{color:#0000FF;}
 		<div id="uuulogin" style="float:left;margin-left:10px;margin-top:-2px;">
 		<p class="ucms3login qqlogin" rel="qq"></p>
 		</div>
-		<i>您可以绑定QQ登陆</i>
+		<i>绑定QQ登陆</i>
 		</td>
 	</tr>
 	<tr>
