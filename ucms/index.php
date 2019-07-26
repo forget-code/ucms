@@ -84,6 +84,7 @@ if(isset($_GET['do'])) {
   <?php
 	$end_time=microtime(true);
 	$total_time=substr($end_time-$start_time,0,5);
+	if($total_time=="0.000") {$total_time="0.001";}
   ?>
   &copy;<a href="http://uuu.la" target="_blank">UCMS <?php echo(version);?></a>. Processed in <?php echo($total_time);?> second(s),<?php echo($GLOBALS['db']->querynum++);?>  queries 
   <?php //未授权请勿去掉版权,详情请见http://uuu.la/services/ ?>

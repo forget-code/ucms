@@ -21,8 +21,9 @@ define('ArticleTable',TableEx.'article');//默认文章表
 define('SiteHash','{sitehash}');//站点随机码,防止冲突
 define('SiteCache',1);//开启缓存,必须开启缓存
 define('TemplateTime',0);//模板缓存时间
-define('TemplateStart','{');//模板开始标签
-define('TemplateEnd','}');//模板结束标签
+define('TemplateStart','{{');//模板开始标签
+define('TemplateEnd','}}');//模板结束标签
+define('TemplateDebug',0);//模板开启调试
 define('IndexCache',0);//首页缓存时间(秒)
 define('AdminOpenid',1);//后台开启第三方登录
 define('AdminFileedit',1);//后台开启文件修改功能

@@ -476,7 +476,7 @@ a{color:#0000FF;}
 	<tr>
 		<td align="left" width=120>数据库表名前缀 : </td>
 		<td>
-		<input type="text" name="tableex" id="" size=40 value="ucms_"><i>避免与其他程序重复</i>
+		<input type="text" name="tableex" id="tableex" size=40 value="ucms_"><i>避免与其他程序重复</i>
 		</td>
 	</tr>
 	<tr>
@@ -628,6 +628,11 @@ a{color:#0000FF;}
 					{
 						alert('请填写数据库用户名');$('#mysql_user').focus();return false;
 					}
+				}
+				if (/^[a-zA-Z][0-9a-zA-Z_]{0,}$/.test($('#tableex').val())==false)
+				{
+					alert('表名前缀请使用英文字母为前缀');
+					return false;
 				}
 				if (systemdomain_check()==false)
 				{

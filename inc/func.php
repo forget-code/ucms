@@ -99,6 +99,8 @@ function i($kind='',$cid=0) {
 		}
 	}elseif($kind=='url') {
 		Return u($channel['cid']);
+	}elseif($kind=='domain') {
+		Return @$channel['csetting']['channel_domain'];
 	}else {
 		if(isset($channel[$kind])) {
 			Return $channel[$kind];
@@ -1660,10 +1662,12 @@ function match_route() {
 	if(substr($uri,0,1)!='/') {$uri='/'.$uri;}
 	$noarguri=explode('?',$uri);
 	$GLOBALS['no_arg_uri']=$noarguri[0];
+	if($GLOBALS['no_arg_uri']=='/'.IndexFile) {$GLOBALS['no_arg_uri']='/';}
 	define('RouterDebug',false);
 	$ifmobile=routermobile();
 	@header(base64_decode('WC1Qb3dlcmVkLUJ5OiBVQ01T'));
 	if(RouterDebug) {echo("<!-- uri:$uri -->\r\n");}
+	if(!is_array($router)) {die('router error!');}
 	foreach($router as $routerkey=>$routervalue) {
 		$ifmatch=true;
 		if(RouterDebug) {echo("<!-- Router: ".str_replace("\\/","/",json_encode($routervalue))."-->\r\n");}
@@ -1681,6 +1685,9 @@ function match_route() {
 			}
 			if(!isset($GLOBALS['db']) && isset($site_db)) {$GLOBALS['db'] = new db();$GLOBALS['db'] -> connect($site_db);}
 			if(isset($routervalue['cid'])) {routercid($routervalue['cid'],$ifmobile);}
+			if(defined('TemplateDebug') && TemplateDebug && defined('cid')) {
+				echo('<!-- cid:'.cid.' -->');
+			}
 			init_route($routerkey,$ifmobile);
 			if(isset($routervalue['cache']) && $routervalue['cache']>0) {
 				routersavecache($uri,ob_get_contents(),$routervalue['cache'],$ifmobile);
@@ -1980,6 +1987,9 @@ function include_template($file) {
 		$content=ucms_template($tempfile);
 		if($content===false) {
 			$content='template not found:'.$file;
+		}
+		if(defined('TemplateDebug') && TemplateDebug) {
+			$content="<!-- $file:start-->".$content."<!-- $file:end-->";
 		}
 		$cached=cacheset($tempfile,$content,TemplateTime,'template');
 		if($cached && $content) {

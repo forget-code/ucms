@@ -44,7 +44,7 @@ channel_select($link['fid']);
 					<td width="100" align="right">栏目域名</td>
 					<td align="left">
 					<input class="inputtext inputshowtips" type="text" size="40" name="channeldomain" value="<?php if(isset($csetting['channel_domain'])) { echo($csetting['channel_domain']);}?>">
-					<i class="ishowtips">如 123.com 多个域名请用 ；分割,不需要绑定则留空</i>
+					<i class="ishowtips"><?php if(defined('SystemDomain') && SystemDomain==false) {echo('当前网站尚未绑定主域名,请先在站点配置文件中绑定主域名.');}?> 只需填写域名,不需要http://,多个域名使用 ; 分割,不需要绑定则留空.  </i>
 					</td>
 				</tr>
 			<tr><td width="100" align="right">栏目备注</td>

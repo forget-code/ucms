@@ -382,7 +382,7 @@ function adminpagelist($recordcount,$pagesize,$curpage,$pages,$url)
 		$endpage=min($startpage+$pages,$totalpage);
 	}
 	if($pageno>1) {
-		$outhtml.="<a href='".str_replace('{page}',$pageno-1,$url)."'>".($pageno-1)."</a>";
+		$outhtml.="<a href='".str_replace('{page}',$pageno-1,$url)."'>&lt;</a>";
 	}
 	for($i=$startpage;$i<=$endpage;$i++)
 	{

@@ -75,8 +75,10 @@ if(isset($_GET['moudleid']) && isset($_GET['fid'])) {
 	if(!$ifhavemoudle) {//如果不存在字段
 		unset($moudleid);
 		unset($fid);
+		$moudleiduri='';
+	}else{
+		$moudleiduri='&fid='.$fid.'&moudleid='.$moudleid;
 	}
-	$moudleiduri='&fid='.$fid.'&moudleid='.$moudleid;
 }else {
 	$moudleiduri='';
 }

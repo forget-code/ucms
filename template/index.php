@@ -3,35 +3,35 @@
 <html>
 <head>
 <meta charset="utf-8"/>
-<title>{z(站点标题)}</title>
-<meta name="keywords" content="{z(关键词)}"/>
-<meta name="description" content="{z(描述)}"/>
+<title>{{z(站点标题)}}</title>
+<meta name="keywords" content="{{z(关键词)}}"/>
+<meta name="description" content="{{z(描述)}}"/>
 <meta name="viewport" content="width=device-width"/>
-<link rel="stylesheet" type="text/css" href="{tempdir}css/style.css" />
+<link rel="stylesheet" type="text/css" href="{{tempdir}}css/style.css" />
 </head>
 <body>
-{file header}
+{{file header}}
 <div class="main warp">
 	<div class="main_left">
-	{$channels=c(2,12)}
-	{loop $channels as $channel}
+	{{$channels=c(2,12)}}
+	{{loop $channels as $channel}}
 		<div class="channel">
-			<p><a href="{$channel['url']}">{$channel['name']}</a></p>
+			<p><a href="{{$channel['url']}}">{{$channel['name']}}</a></p>
 			<ul>
-			{$set=array()}
-			{$set['cid']=$channel['cid']}
-			{$set['pagesize']=12}
-			{$articles=alist($set)}
-			{loop $articles['list'] as $a}
-				<li><a href="{$a['link']}" target="_blank">{$a['title']}</a></li>
-			{/loop}
+			{{$set=array()}}
+			{{$set['cid']=$channel['cid']}}
+			{{$set['pagesize']=12}}
+			{{$articles=alist($set)}}
+			{{loop $articles['list'] as $a}}
+				<li><a href="{{$a['link']}}" target="_blank">{{$a['title']}}</a></li>
+			{{/loop}}
 			</ul>
 		</div>
-	{/loop}
+	{{/loop}}
 	</div>
 	<div class="main_right">
-		{file right_article}
-		{file right_ad}
+		{{file right_article}}
+		{{file right_ad}}
 		<div class="box">
 			<p class="box_title">友情链接</p>
 			<p class="box_content">
@@ -42,6 +42,6 @@
 		</div>
 	</div>
 </div>
-{file footer}
+{{file footer}}
 </body>
 </html>
