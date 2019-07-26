@@ -105,6 +105,7 @@ table td, table th {
 	border-right:1px solid #CCCCCC;
 	border-bottom:1px solid #CCCCCC;
 }
+
 table th {
 	background-color:#EEEEEE;
 	height:16px;
@@ -119,7 +120,12 @@ table th {
 	display:inline;
 	color:#0000FF;
 }
-
+table.noborder{
+	border:0px;
+}
+table.noborder td, table.noborder th {
+	border:0px;
+}
 
 #head .logo {
 	float:left;

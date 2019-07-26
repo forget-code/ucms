@@ -35,16 +35,17 @@ if(isset($_POST['cid'])) {
 			$channelarray['info']['fid']=dbstr($channelarray['info']['fid']);
 			$fidcid = $GLOBALS['db'] -> one("SELECT cid FROM ".tableex('channel')." where cname='".$channelarray['info']['fid']."' limit 1");
 			if(isset($fidcid['cid'])) {
-				$newchannelinfo['fid']=intval($fidcid['cid']);
+				//$newchannelinfo['fid']=intval($fidcid['cid']); 
 			}
 		}
 		if(isset($channelarray['info']['cvalue']) && !empty($channelarray['info']['cvalue'])) {$newchannelinfo['cvalue']=dbstr($channelarray['info']['cvalue']);}
-		if(isset($channelarray['info']['ckind']) && !empty($channelarray['info']['ckind'])) {$newchannelinfo['ckind']=dbstr($channelarray['info']['ckind']);}else {$channelarray['info']['ckind']=1;}
-		if(isset($channelarray['info']['ifshow']) && !empty($channelarray['info']['ifshow'])) {$newchannelinfo['ifshow']=dbstr($channelarray['info']['ifshow']);}else {$channelarray['info']['ifshow']=1;}
-		if(isset($channelarray['info']['ifshownav']) && !empty($channelarray['info']['ifshownav'])) {$newchannelinfo['ifshownav']=dbstr($channelarray['info']['ifshownav']);}else {$channelarray['info']['ifshownav']=1;}
-		if(isset($channelarray['info']['ifshowadmin']) && !empty($channelarray['info']['ifshowadmin'])) {$newchannelinfo['ifshowadmin']=dbstr($channelarray['info']['ifshowadmin']);}else {$channelarray['info']['ifshowadmin']=1;}
-		if(isset($channelarray['info']['ifshowleft']) && !empty($channelarray['info']['ifshowleft'])) {$newchannelinfo['ifshowleft']=dbstr($channelarray['info']['ifshowleft']);}else {$channelarray['info']['ifshowleft']=1;}
-		if(isset($channelarray['info']['newwindow']) && !empty($channelarray['info']['newwindow'])) {$newchannelinfo['newwindow']=dbstr($channelarray['info']['newwindow']);}else {$channelarray['info']['newwindow']=0;}
+		if(isset($channelarray['info']['ckind']) && !empty($channelarray['info']['ckind'])) {$newchannelinfo['ckind']=dbstr($channelarray['info']['ckind']);}else {$newchannelinfo['ckind']=1;}
+		if(isset($channelarray['info']['ifshow']) && !empty($channelarray['info']['ifshow'])) {$newchannelinfo['ifshow']=dbstr($channelarray['info']['ifshow']);}else {$newchannelinfo['ifshow']=0;}
+		if(isset($channelarray['info']['ifshownav']) && !empty($channelarray['info']['ifshownav'])) {$newchannelinfo['ifshownav']=dbstr($channelarray['info']['ifshownav']);}else {$newchannelinfo['ifshownav']=0;}
+		if(isset($channelarray['info']['ifshowadmin'])) {$newchannelinfo['ifshowadmin']=dbstr($channelarray['info']['ifshowadmin']);}else {$newchannelinfo['ifshowadmin']=1;}
+		if(isset($channelarray['info']['ifshowleft'])) {$newchannelinfo['ifshowleft']=dbstr($channelarray['info']['ifshowleft']);}else {$newchannelinfo['ifshowleft']=1;}
+		if(isset($channelarray['info']['newwindow']) && !empty($channelarray['info']['newwindow'])) {$newchannelinfo['newwindow']=dbstr($channelarray['info']['newwindow']);}else {$newchannelinfo['newwindow']=0;}
+
 		$temp_setting=json_decode($channelarray['info']['csetting'],1);
 		if(isset($temp_setting['articletable']) && !empty($temp_setting['articletable'])) {
 			$thisarticletable=$temp_setting['articletable'];

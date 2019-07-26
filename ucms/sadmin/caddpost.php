@@ -126,6 +126,7 @@ if($query) {
 	}
 	if($lastid>0)
 	{
+		$settingfile_copy=intval($_POST['settingfile_copy']);
 		$settingfile=intval($_POST['settingfile']);
 		if($settingfile==2 && empty($_FILES['txt']['error'])) {
 			$str=file_get_contents($_FILES['txt']['tmp_name']);
@@ -141,52 +142,50 @@ if($query) {
 			}else {
 				$msg.=' 读取栏目配置文件失败';
 			}
-		}elseif(($settingfile==1 || ($settingfile==3 && $fid==0)) && $ckind==1) {
+		}elseif($settingfile==1 && $ckind==1) {
 			$keyname='default_1';
 			echo('<script type="text/javascript">window.location.href = "?do=sadmin_cinedit&cid='.$lastid.'&key='.$keyname.'";</script>');
 			exit();
-		}elseif(($settingfile==1 || ($settingfile==3 && $fid==0)) && $ckind==2) {
+		}elseif($settingfile==1 && $ckind==2) {
 			$keyname='default_2';
 			echo('<script type="text/javascript">window.location.href = "?do=sadmin_cinedit&cid='.$lastid.'&key='.$keyname.'";</script>');
 			exit();
-		}elseif($settingfile==3) {
-			if($fid>0) {
-				$fidinfo = $GLOBALS['db'] -> one("SELECT * FROM ".tableex('channel')." where cid='$fid'");
-				if(!$fidinfo) {
-					adminmsg('','父栏目已不存在');
-				}
-				$channeldata=array();
-				$fidinfo['fid']=$fid;
-				$channeldata['info']=$fidinfo;
-				$moudles = $GLOBALS['db'] -> all("SELECT * FROM ".tableex('moudle')." where cid='$fid' order by morder asc");
-				foreach($moudles as $key=>$thismoudle) {
-					foreach($thismoudle as $key1=>$val) {
-						if(is_numeric($key1)) {
-							unset($moudles[$key][$key1]);
-						}
-					}
-					unset($moudles[$key]['ifcreated']);
-				}
-				$channeldata['moudle']=$moudles;
-				$strs = $GLOBALS['db'] -> all("SELECT * FROM ".tableex('str')." where strcid='$fid' order by strorder asc");
-				foreach($strs as $key=>$thisstr) {
-					foreach($thisstr as $key1=>$val) {
-						if(is_numeric($key1)) {
-							unset($strs[$key][$key1]);
-						}
+		}elseif($settingfile==3 && ($fid>0 || $settingfile_copy>0)) {
+			if($settingfile_copy==0) {$settingfile_copy=$fid;}
+			$fidinfo = $GLOBALS['db'] -> one("SELECT * FROM ".tableex('channel')." where cid='$settingfile_copy'");
+			if(!$fidinfo) {
+				adminmsg('','指定的栏目已不存在');
+			}
+			$channeldata=array();
+			$fidinfo['fid']=$fid;
+			$channeldata['info']=$fidinfo;
+			$moudles = $GLOBALS['db'] -> all("SELECT * FROM ".tableex('moudle')." where cid='$settingfile_copy' order by morder asc");
+			foreach($moudles as $key=>$thismoudle) {
+				foreach($thismoudle as $key1=>$val) {
+					if(is_numeric($key1)) {
+						unset($moudles[$key][$key1]);
 					}
 				}
-				$channeldata['str']=$strs;
-				$keyname='my_channel_in'.time().rand(100,999);
-				$str=base64_encode(json_encode($channeldata));
-				$savestr=cacheset($keyname,$str,3600*12,'channel_in');
-				if($savestr) {
-					echo('<script type="text/javascript">window.location.href = "?do=sadmin_cinedit&cid='.$lastid.'&key='.$keyname.'";</script>');
-					exit();
-				}else {
-					$msg.=' 您关闭了缓存,不能导入栏目配置';
+				unset($moudles[$key]['ifcreated']);
+			}
+			$channeldata['moudle']=$moudles;
+			$strs = $GLOBALS['db'] -> all("SELECT * FROM ".tableex('str')." where strcid='$settingfile_copy' order by strorder asc");
+			foreach($strs as $key=>$thisstr) {
+				foreach($thisstr as $key1=>$val) {
+					if(is_numeric($key1)) {
+						unset($strs[$key][$key1]);
+					}
 				}
-				
+			}
+			$channeldata['str']=$strs;
+			$keyname='my_channel_in'.time().rand(100,999);
+			$str=base64_encode(json_encode($channeldata));
+			$savestr=cacheset($keyname,$str,3600*12,'channel_in');
+			if($savestr) {
+				echo('<script type="text/javascript">window.location.href = "?do=sadmin_cinedit&cid='.$lastid.'&key='.$keyname.'";</script>');
+				exit();
+			}else {
+				$msg.=' 您关闭了缓存,不能导入栏目配置';
 			}
 		}
 		

@@ -15,6 +15,7 @@ array(5,'logo图片'),
 array(1,'备案号'),
 array(2,'统计代码'),
 );
+channelrouter();
 ?>
 <div id="UMain">
   <!-- 当前位置 -->
@@ -37,7 +38,7 @@ array(2,'统计代码'),
 </tr>
 <?php
 $neworder=0;
-	$query = $GLOBALS['db'] -> query("SELECT * FROM ".tableex('str')." where strcid='$cid' order by strorder asc");
+	$query = $GLOBALS['db'] -> query("SELECT * FROM ".tableex('str')." where strcid='$cid' and inputkind>0 order by strorder asc");
 	$linkbasic = $GLOBALS['db'] -> fetchall($query);
 	if($linkbasic) {
 		echo("<meta http-equiv=refresh content='0; url=?do=sadmin_sbasic'>");

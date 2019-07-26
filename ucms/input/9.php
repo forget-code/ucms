@@ -4,10 +4,14 @@ if(!is_numeric($inputvalue)) {
 	if($defaulttime) {
 		$inputvalue=date("Y-m-d H:i:s",$defaulttime);
 	}else {
-		$inputvalue=date("Y-m-d H:i:s");
+		$inputvalue='';
 	}
 }else {
-	$inputvalue=date("Y-m-d H:i:s",$inputvalue);
+	if(empty($inputvalue)) {
+		$inputvalue='';
+	}else {
+		$inputvalue=date("Y-m-d H:i:s",$inputvalue);
+	}
 }
 ?>
 <input<?php echo($style);?> name="<?php echo($inputname);?>" autocomplete="off" id="time_<?php echo($inputname);?>" type="text" value="<?php echo($inputvalue);?>" size="20"  class="inputtext timeinput"/>

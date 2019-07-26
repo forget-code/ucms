@@ -37,12 +37,14 @@ if(isset($_POST['alevel'])) {
 }
 //栏目权限
 if($quan['alevel']==1) {
-	foreach($_POST['s'] as $key=>$val) {
-		$val=intval($val);
-		if(isset($_POST['s_'.$val])) {
-			$quan['s'][$val][0]=1;
-			foreach($_POST['s_'.$val] as $skey=>$sval) {
-				$quan['s'][$val][$sval]=1;
+	if(isset($_POST['s'])) {
+		foreach($_POST['s'] as $key=>$val) {
+			$val=intval($val);
+			if(isset($_POST['s_'.$val])) {
+				$quan['s'][$val][0]=1;
+				foreach($_POST['s_'.$val] as $skey=>$sval) {
+					$quan['s'][$val][$sval]=1;
+				}
 			}
 		}
 	}

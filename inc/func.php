@@ -27,6 +27,25 @@ function c($kind=0,$num=9999,$fid=0,$shownav=0) {
 	$channel=getchannelscache();
 	$newchannel=array();
 	$count=0;
+	if(isset($GLOBALS['nav'][$fid])) {
+		if(is_array($GLOBALS['nav'][$fid])) {
+			$diychannel=$GLOBALS['nav'][$fid];
+		}elseif(function_exists($GLOBALS['nav'][$fid])) {
+			$diychannel=$GLOBALS['nav'][$fid]($fid);
+		}
+		if(isset($diychannel)) {
+			foreach($diychannel as $val) {
+				if($shownav==0 || !isset($val['ifshownav']) ||($shownav>0 && @$val['ifshownav'])) {
+					$newchannel[]=$val;
+					$count++;
+				}
+				if($count==$num) {
+					Return $newchannel;
+				}
+			}
+			Return $newchannel;
+		}
+	}
 	foreach($channel as $val) {
 		if($fid==$val['fid']) {
 			if($shownav==0 || ($shownav>0 && $val['ifshownav'])) {
@@ -497,11 +516,23 @@ function ainsert($article,$setting='') {
 		$article[$key]=addslashes_str($article[$key],$setting['addslashes']);
 	}
 	if($setting['check']) {
-		$columns = $GLOBALS['db'] -> all("select mname,ifonly,strdefault,msetting from ".tableex('moudle')." where cid=".$setting['cid']."  order by morder asc;");
+		$columns = $GLOBALS['db'] -> all("select mname,mkind,ifonly,strdefault,msetting from ".tableex('moudle')." where cid=".$setting['cid']."  order by morder asc;");
 		foreach($columns as $thiscolumn) {
 			$key=$thiscolumn['mname'];
 			if(!isset($article[$key]) && $setting['default']) {
 				$article[$key]=$thiscolumn['strdefault'];
+				if($thiscolumn['mkind']==9) {
+					if($thiscolumn['strdefault']=='now') {
+						$article[$key]=time();
+					}else{
+						$thiscolumn['strdefault']=@strtotime($thiscolumn['strdefault']);
+						if($thiscolumn['strdefault']) {
+							$article[$key]=$thiscolumn['strdefault'];
+						}else {
+							$article[$key]=0;
+						}
+					}
+				}
 			}
 			if(isset($article[$key])) {
 				$thismsetting=json_decode($thiscolumn['msetting'],1);
@@ -876,22 +907,32 @@ function nav($where=0) {
 	if(!isset($where['html'])) {
 		$where['html']='<li{onstyle}><a href="{url}"{target}>{name}</a></li>';
 	}
+	if(isset($GLOBALS['nav'][$cid])) {
+		if(is_array($GLOBALS['nav'][$cid])) {
+			$channelarray=$GLOBALS['nav'][$cid];
+		}elseif(function_exists($GLOBALS['nav'][$cid])){
+			$channelarray=$GLOBALS['nav'][$cid]($cid);
+		}
+		
+	}
 	foreach($channelarray as $key=>$channel) {
 		$thisstr=$where['html'];
-		if(in_array($channel['cid'],$onarray)) {
-			$channel['onstyle']=$where['onstyle'];
-		}else {
-			$channel['onstyle']='';
+		if(!isset($channel['onstyle']) || empty($channel['onstyle'])) {
+			if(in_array($channel['cid'],$onarray)) {
+				$channel['onstyle']=$where['onstyle'];
+			}else {
+				$channel['onstyle']='';
+			}
 		}
 		if(defined('cid') && cid==0 && $channel['cid']==0) {//homepage
 			$channel['onstyle']=$where['onstyle'];
 		}
 		$returnarray[]=$channel;
 		if(!isset($where['returnarray']) || $where['returnarray']==0) {
-			$thisstr=str_replace('{url}',$channel['url'],$thisstr);
-			$thisstr=str_replace('{target}',$channel['target'],$thisstr);
-			$thisstr=str_replace('{name}',$channel['name'],$thisstr);
-			$thisstr=str_replace('{onstyle}',$channel['onstyle'],$thisstr);
+			$thisstr=str_replace('{url}',@$channel['url'],$thisstr);
+			$thisstr=str_replace('{target}',@$channel['target'],$thisstr);
+			$thisstr=str_replace('{name}',@$channel['name'],$thisstr);
+			$thisstr=str_replace('{onstyle}',@$channel['onstyle'],$thisstr);
 			$returnstr.=$thisstr."\r\n";
 		}
 	}
@@ -939,6 +980,46 @@ function cnav($cid='',$returnarray=false,$linktag=' &gt; ',$homepage=SystemDir) 
 			$cid=$thischannel['fid'];
 		}
 	}
+}
+function getallchannelscache() {
+	if(isset($GLOBALS['allchannelscache'])) {
+		Return $GLOBALS['allchannelscache'];
+	}
+	$channelcachekeyname='allchannelscache';
+	$channelcache=cacheget($channelcachekeyname,604800,'channel');
+	if($channelcache) {
+		$channels=json_decode($channelcache,1);
+	}else {
+		$channelslist=$GLOBALS['db']->all("SELECT cid,fid,ifshownav,cname,ckind,cvalue,newwindow,csetting FROM ".tableex('channel')." where ckind<>'4' order by corder asc");
+		if($channelslist) {
+			$channels=array();
+			foreach($channelslist as $val) {
+				unset($thischannel);
+				$thischannel=array();
+				$thischannel['cid']=$val['cid'];
+				$thischannel['fid']=$val['fid'];
+				$thischannel['ckind']=$val['ckind'];
+				$thischannel['ifshownav']=$val['ifshownav'];
+				$thischannel['name']=$val['cname'];
+				if($val['newwindow']==1) {
+					$thischannel['target']=' target="_blank" ';
+				}else {
+					$thischannel['target']='';
+				}
+				$thischannel['url']=getchannelurl($val);
+				if(empty($thischannel['url'])) {
+					$thischannel['url']='#';
+					$thischannel['target']='';
+				}
+				$channels[]=$thischannel;
+			}
+			cacheset($channelcachekeyname,json_encode($channels),604800,'channel');
+		}else {
+			Return array();
+		}
+	}
+	$GLOBALS['allchannelscache']=$channels;
+	Return $channels;
 }
 function getchannelscache() {
 	if(isset($GLOBALS['channelscache'])) {
@@ -1492,7 +1573,9 @@ function password_md5($password='') {
 function createDir($path){
 	if (!file_exists($path)){
 		createDir(dirname($path));
-		mkdir($path, 0777);
+		if(!@mkdir($path, 0777)) {
+			die(dirname($path).' permission denied');
+		}
 	}
 }
 function notfound() {
@@ -1509,11 +1592,7 @@ function match_route() {
 	}elseif(isset($_SERVER['HTTP_REQUEST_URI'])) {
 		$_SERVER['REQUEST_URI'] = $_SERVER['HTTP_REQUEST_URI'];
 	}
-	if(UrlRewrite) {
-		if(substr($_SERVER['REQUEST_URI'],1,strlen(IndexFile))==IndexFile) {
-			$_SERVER['REQUEST_URI']='/';
-		}
-	}else {
+	if(!UrlRewrite) {
 		$_SERVER['REQUEST_URI']=substr($_SERVER['REQUEST_URI'],strlen(SystemDir));
 		if(substr($_SERVER['REQUEST_URI'],0,strlen(IndexFile))==IndexFile) {
 			$_SERVER['REQUEST_URI']=substr($_SERVER['REQUEST_URI'],strlen(IndexFile));
@@ -1523,6 +1602,8 @@ function match_route() {
 			$_SERVER['REQUEST_URI']=urlencode($_SERVER['REQUEST_URI']);
 			$_SERVER['REQUEST_URI']=uridecode($_SERVER['REQUEST_URI']);
 		}
+	}else {
+		if($_SERVER['REQUEST_URI']=='/'.IndexFile) {$_SERVER['REQUEST_URI']='/';}
 	}
 	$uri=$_SERVER['REQUEST_URI'];
 	if(substr($uri,0,1)!='/') {$uri='/'.$uri;}
@@ -1582,7 +1663,7 @@ function init_route($routerkey,$ifmobile) {
 		exit;
 	}elseif($routerkey==='not_found') {
 		if(RouterDebug) {echo("<!-- 404 -->\r\n");exit();}
-		header("HTTP/1.1 404 Not Found");
+		@header("HTTP/1.1 404 Not Found");
 		if($ifmobile && is_file(SystemRoot.TemplateDir.DIRECTORY_SEPARATOR.'m'.DIRECTORY_SEPARATOR.'404.php')) {
 			$tempfile=include_template('m'.DIRECTORY_SEPARATOR.'404.php');
 			if($tempfile) {include($tempfile);}
@@ -1789,10 +1870,10 @@ function routersavecache($uri,$content,$cachetime,$ifmobile) {
 	routerhttpcache($cachetime,$filetime);
 }
 function routerhttpcache($cachetime,$filetime) {
-	header('Last-Modified: '.$filetime);
+	@header('Last-Modified: '.$filetime);
 	if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
 		if($filetime==$_SERVER['HTTP_IF_MODIFIED_SINCE']) {
-			header("HTTP/1.0 304 Not Modified");
+			@header("HTTP/1.0 304 Not Modified");
 			exit();
 		}
 	}
@@ -1800,10 +1881,10 @@ function routerhttpcache($cachetime,$filetime) {
 function routerheader($header) {
 	if(is_array($header)) {
 		foreach($header as $val) {
-			header($val);
+			@header($val);
 		}
 	}else {
-		header($header);
+		@header($header);
 	}
 	Return true;
 }

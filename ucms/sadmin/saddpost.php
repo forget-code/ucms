@@ -5,7 +5,6 @@ checktoken();
 $strcid=intval($_POST['strcid']);
 $neworder = $GLOBALS['db'] -> fetchcount("SELECT strorder FROM ".tableex('str')." where strcid='$strcid' order by strorder desc limit 1");
 if(!$neworder) {
-	$query = $GLOBALS['db'] -> query("INSERT INTO `".tableex('str')."` (`strname`,`strcid`,`strorder`,`inputkind`,`strvalue`,`ifadmin`) VALUES ('router','0','0','0','','1');");
 	$neworder=0;
 }
 $msg='';

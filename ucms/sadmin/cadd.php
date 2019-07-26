@@ -49,36 +49,36 @@ channel_select($cid);
 			<label><input type="radio"  name="ckind"  value="3" class="settingfile0">前台链接</label>
 			<label><input type="radio"  name="ckind"  value="4" class="settingfile0">后台链接</label>
 				</td></tr>
-		<tr><td width="100" align="right">导入栏目配置</td>
+		<tr><td width="100" align="right">栏目配置</td>
 		<td align="left">
-			<div style="float:left;">
-				<label><input type="radio" class="settingfile" id="settingfile0" name="settingfile" value='0'<?php if($settingfile==0) {echo(' checked');}?>>无</label>
-				<label><input type="radio" class="settingfile" name="settingfile" value='1'<?php if($settingfile==1) {echo(' checked');}?>>默认模型</label>
-				<label><input type="radio" class="settingfile" name="settingfile" value='3'<?php if($settingfile==3) {echo(' checked');}?>>继承上级栏目</label>
-				<label><input type="radio" class="settingfile" name="settingfile" value='2'<?php if($settingfile==2) {echo(' checked');}?>>导入配置文件</label>
-			</div>
-			<div id="file" style="display:none;float:left;margin-left:10px">
-			<input type="file" name="txt" id="chosefile">
-			</div>
-			<script>
-				$(function(){
-					$('.settingfile').click(function(){
-						if ($(this).val()==2)
-						{
-							$('#chosefile').click();
-							$('#file').show();
-						}else{
-							$('#file').hide();
-						}
-					});
-					$('.settingfile0').click(function(){
-						$('#settingfile0').attr('checked',true);
-						$('#file').hide();
-					});
-					
-				});
-			</script>
-			</td></tr>
+			<table border="0" cellpadding="8" cellspacing="0" class="noborder">
+				<tr>
+					<td><label><input type="radio" class="settingfile" id="settingfile0" name="settingfile" value='0'<?php if($settingfile==0) {echo(' checked');}?>>不导入</label></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><label><input type="radio" class="settingfile" name="settingfile" value='1'<?php if($settingfile==1) {echo(' checked');}?>>默认配置</label></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><label><input type="radio" class="settingfile" name="settingfile" id="settingfile3" value='3'<?php if($settingfile==3) {echo(' checked');}?>>复制其他栏目配置</label></td>
+					<td>
+						<select name="settingfile_copy" id="settingfile_copy">
+						<?php
+						channel_select($cid,0,0,1,'上级栏目');
+						?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td><label><input type="radio" class="settingfile" name="settingfile" id="settingfile2" value='2'<?php if($settingfile==2) {echo(' checked');}?>>导入配置文件</label></td>
+					<td><div id="file">
+					<input type="file" name="txt" id="chosefile">
+					</div></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
       <tr>
        <td width="100"></td>
        <td>
@@ -89,3 +89,15 @@ channel_select($cid);
     </form>
        </div>
  </div>
+
+<script>
+	$(function(){
+		$('#settingfile_copy').click(function(){
+			$('#settingfile3').prop('checked',true);
+		});
+		$('#chosefile').click(function(){
+			$('#settingfile2').prop('checked',true);
+		});
+		
+	});
+</script>
